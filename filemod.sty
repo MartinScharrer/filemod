@@ -70,6 +70,38 @@
 %%%%%%%
 
 
+\def\filemodNewest#1{%
+  \filemod@newest#1\filemod@end
+}
+\def\filemodOldest#1{%
+  \filemod@oldest#1\filemod@end
+}
+\def\filemodnewest#1#2{\filemodcmp{#1}{#2}{#1}{#2}}
+\def\filemodoldest#1#2{\filemodcmp{#1}{#2}{#2}{#1}}
+
+\def\filemod@newest#1#2{%
+  \iffilemod@end{#2}%
+    {#1}%
+    {\filemod@newest{\filemodnewest{#1}{#2}}}%
+}
+\def\filemod@oldest#1#2{%
+  \iffilemod@end{#2}%
+    {#1}%
+    {\filemod@oldest{\filemodoldest{#1}{#2}}}%
+}
+
+\def\iffilemod@end#1{%
+  \ifx\filemod@end#1%
+    \expandafter\@firstoftwo
+  \else
+    \expandafter\@secondoftwo
+  \fi
+}
+
+
+
+\def\filemod@end{\@gobble{filemod@end}}
+
 
 %%%%% FILE DATA COMPARISON
 
@@ -78,9 +110,7 @@
     \ifcase0%
         \ifnum\filemodnumdate{#2}>\filemodnumdate{#1}\space1\else
             \ifnum\filemodnumdate{#2}=\filemodnumdate{#1}\space
-                \ifnum\filemodnumtime{#2}>\filemodnumtime{#1}\space1%\else
-                    %\ifnum\filemodnumdate{#2}=\filemodnumdate{#1}\space2\fi
-                \fi
+                \ifnum\filemodnumtime{#2}>\filemodnumtime{#1}\space1\fi
             \fi
         \fi
     \space
