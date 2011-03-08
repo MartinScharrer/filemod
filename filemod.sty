@@ -1,39 +1,33 @@
-\def\filemodparse#1{%
-    \expandafter\filemod@parse\pdffilemoddate{#1}\relax
+\def\filemodparse#1#2{%
+    \expandafter\filemod@parse\pdffilemoddate{#2}\relax{#1}%
 }
-\def\filemod@parse#1\relax{%
+\def\filemod@parse#1\relax#2{%
     \ifx\relax#1\relax
         \expandafter\@firstoftwo
     \else
         \expandafter\@secondoftwo
     \fi
-    {\filemodnotexists}%
-    {\filemod@parse@#1\relax}%
+    {\filemodnotexists{#2}}%
+    {\filemod@parse@#1\empty{#2}\relax}%
 }
-\def\filemodnotexists{%
-    \filemodhandledate{0000}{00}{00}%
-    \filemodhandletime{00}{00}{00}{Z}%
+
+\def\filemodnotexists#1{%
+    #1{0000}{00}{00}{00}{00}{00}{Z}%
 }
 \begingroup
 \@makeother\D
 \@makeother:
 \gdef\filemod@parse@D:#1#2#3#4#5#6#7#8#9\relax{%
-    \filemodhandledate{#1#2#3#4}{#5#6}{#7#8}%
-    \filemod@parse@time#9\relax
+    \filemod@parse@@{{#1#2#3#4}{#5#6}{#7#8}}#9\relax
 }
 \endgroup
-\def\filemod@parse@time#1#2#3#4#5#6#7\relax{%
-    \filemodhandletime{#1#2}{#3#4}{#5#6}{#7}%
+\def\filemod@parse@@#1#2#3#4#5#6#7#8\empty#9\relax{%
+    #9#1{#2#3}{#4#5}{#6#7}{#8}%
 }
 
-\let\filemodhandledate\empty
-\let\filemodhandletime\empty
-
-\def\filemodgetnum{\filemodcall\filemod@getnum}
-
-\def\filemodprint{\filemodcall\thefilemod}
-\def\filemodprintdate{\filemodcall\the@filemoddate}
-\def\filemodprinttime{\filemodcall\the@filemodtime}
+\def\filemodprint{\filemodparse\thefilemod}
+\def\filemodprintdate{\filemodparse\the@filemoddate}
+\def\filemodprinttime{\filemodpares\the@filemodtime}
 
 \def\thefilemod#1#2#3#4#5#6#7{%
     \thefilemoddate{#1}{#2}{#3}%
@@ -53,18 +47,12 @@
     \thefilemodtime
 }
 
+\def\filemodnumdate{\filemodparse\filemod@numdate}
+\def\filemodnumtime{\filemodparse\filemod@numtime}
+\def\filemod@numdate#1#2#3#4#5#6#7{#1#2#3}
+\def\filemod@numtime#1#2#3#4#5#6#7{#4#5#6}
 
-\def\filemodcall#1#2{%
-    \begingroup
-    \def\@tempa{#1}%
-    \let\filemodhandledate\empty
-    \let\filemodhandletime\empty
-    \edef\@tempb{\filemodparse{#2}}%
-    \expandafter\expandafter
-    \expandafter\endgroup
-    \expandafter\@tempa
-    \@tempb
-}
+\def\filemodgetnum{\filemodparse\filemod@getnum}
 
 \def\filemod@getnum#1#2#3#4#5#6#7{%
     \def\filemoddate{#1#2#3}%
