@@ -3,15 +3,16 @@
 }
 \def\filemod@parse#1\relax{%
     \ifx\relax#1\relax
-        \expandafter\filemodnotexists
+        \expandafter\@firstoftwo
     \else
-        \expandafter\filemod@parse@#1\relax
+        \expandafter\@secondoftwo
     \fi
+    {\filemodnotexists}%
+    {\filemod@parse@#1\relax}%
 }
 \def\filemodnotexists{%
     \filemodhandledate{0000}{00}{00}%
-    \filemodhandletime{00}{00}{00}%
-    \filemodhandletz{Z}%
+    \filemodhandletime{00}{00}{00}{Z}%
 }
 \begingroup
 \@makeother\D
@@ -22,13 +23,11 @@
 }
 \endgroup
 \def\filemod@parse@time#1#2#3#4#5#6#7\relax{%
-    \filemodhandletime{#1#2}{#3#4}{#5#6}%
-    \filemodhandletz{#7}%
+    \filemodhandletime{#1#2}{#3#4}{#5#6}{#7}%
 }
 
 \let\filemodhandledate\empty
 \let\filemodhandletime\empty
-\let\filemodhandletz\empty
 
 \def\filemodgetnum{\filemodcall\filemod@getnum}
 
@@ -44,8 +43,8 @@
 \def\thefilemoddate#1#2#3{%
     #1/#2/#3%
 }
-\def\thefilemodtime#1#2#3{%
-    #1:#2:#3%
+\def\thefilemodtime#1#2#3#4{%
+    #1:#2:#3~#4%
 }
 \def\the@filemoddate#1#2#3#4#5#6#7{%
     \thefilemoddate{#1}{#2}{#3}%
@@ -60,7 +59,6 @@
     \def\@tempa{#1}%
     \let\filemodhandledate\empty
     \let\filemodhandletime\empty
-    \let\filemodhandletz\empty
     \edef\@tempb{\filemodparse{#2}}%
     \expandafter\expandafter
     \expandafter\endgroup
@@ -88,7 +86,6 @@
     \filemodgetnum{#2}%
     \let\filemoddatea\filemoddate
     \let\filemodtimea\filemodtime
-    \let\filemodtza\filemodtz
     \filemodgetnum{#3}%
     \ifcase0%
         \ifnum\filemoddate>\filemoddatea\space1\else
