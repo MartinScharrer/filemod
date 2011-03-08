@@ -5,18 +5,20 @@
 \usepackage[german]{datetime}
 
 \begin{document}
-
+\begingroup
+\tracingall
 \filemodcmp[3]{filea}{fileb}
 {first}{second}{neither}
 
 \Filemodcmp[3]{filea}{fileb}
 \message{^^J^^J\filemodcmpresult{first}{second}{neither}^^J}
 
-\renewcommand\handlefilemoddate[3]{\formatdate{#3}{#2}{#1}}
+\renewcommand\handlefilemoddate[3]{\formatdate{#3}{#2}{#1} -- }
 \def\handlefilemodtime{\formattime}
 \def\handlefilemodtz#1{(#1)}
 
-\parsefilemoddate{filea}
+\filemodparse{filea}
+\endgroup
 \end{document}
 
 

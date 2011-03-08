@@ -1,41 +1,40 @@
-\makeatletter
-\def\parsefilemoddate#1{%
-    \expandafter\parsefilemoddate@\pdffilemoddate{#1}\relax
+\def\filemodparse#1{%
+    \expandafter\filemod@parse\pdffilemoddate{#1}\relax
 }
-\def\parsefilemoddate@#1\relax{%
+\def\filemod@parse#1\relax{%
     \ifx\relax#1\relax
         \expandafter\filemodnotexists
     \else
-        \expandafter\parsefilemod@date#1\relax
+        \expandafter\filemod@parse@#1\relax
     \fi
 }
 \def\filemodnotexists{%
-    \handlefilemoddate{0000}{00}{00}%
-    \handlefilemodtime{00}{00}{00}%
-    \handlefilemodtz{Z}%
+    \filemodhandledate{0000}{00}{00}%
+    \filemodhandletime{00}{00}{00}%
+    \filemodhandletz{Z}%
 }
 \begingroup
 \@makeother\D
 \@makeother:
-\global\@namedef{parsefilemod@date}D:#1#2#3#4#5#6#7#8#9\relax{%
-    \handlefilemoddate{#1#2#3#4}{#5#6}{#7#8}%
-    \parsefilemod@time#9\relax
+\gdef\filemod@parse@D:#1#2#3#4#5#6#7#8#9\relax{%
+    \filemodhandledate{#1#2#3#4}{#5#6}{#7#8}%
+    \filemod@parse@time#9\relax
 }
 \endgroup
-\def\parsefilemod@time#1#2#3#4#5#6#7\relax{%
-    \handlefilemodtime{#1#2}{#3#4}{#5#6}%
-    \handlefilemodtz{#7}%
+\def\filemod@parse@time#1#2#3#4#5#6#7\relax{%
+    \filemodhandletime{#1#2}{#3#4}{#5#6}%
+    \filemodhandletz{#7}%
 }
 
-\let\handlefilemoddate\empty
-\let\handlefilemodtime\empty
-\let\handlefilemodtz\empty
+\let\filemodhandledate\empty
+\let\filemodhandletime\empty
+\let\filemodhandletz\empty
 
-\def\filemodgetnum{\filemod@call\filemod@getnum}
+\def\filemodgetnum{\filemodcall\filemod@getnum}
 
-\def\filemodprint{\filemod@call\thefilemod}
-\def\filemodprintdate{\filemod@call\the@filemoddate}
-\def\filemodprinttime{\filemod@call\the@filemodtime}
+\def\filemodprint{\filemodcall\thefilemod}
+\def\filemodprintdate{\filemodcall\the@filemoddate}
+\def\filemodprinttime{\filemodcall\the@filemodtime}
 
 \def\thefilemod#1#2#3#4#5#6#7{%
     \thefilemoddate{#1}{#2}{#3}%
@@ -56,13 +55,13 @@
 }
 
 
-\def\filemod@call#1#2{%
+\def\filemodcall#1#2{%
     \begingroup
     \def\@tempa{#1}%
-    \let\handlefilemoddate\empty
-    \let\handlefilemodtime\empty
-    \let\handlefilemodtz\empty
-    \edef\@tempb{\parsefilemoddate{#2}}%
+    \let\filemodhandledate\empty
+    \let\filemodhandletime\empty
+    \let\filemodhandletz\empty
+    \edef\@tempb{\filemodparse{#2}}%
     \expandafter\expandafter
     \expandafter\endgroup
     \expandafter\@tempa
