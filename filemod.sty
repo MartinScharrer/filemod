@@ -72,20 +72,12 @@
 
 %%%%% ADVANCED FILE DATA COMPARISON
 
-
-\def\filemodNewest#1#2{%
-  \filemod@Newest#1\filemod@end
-}
-\def\filemodOldest#1{%
-  \filemod@Oldest#1\filemod@end
+\def\filemod@newest#1#2#3{%
+    \filemod@@cmp>{#1}{#2}{#3}{#2}{#3}%
 }
 
-\def\filemod@newest#1#2{%
-  \filemodcmp{#1}{#2}{#1}{#2}%
-}
-
-\def\filemod@oldest#1#2{%
-  \filemodcmp{#1}{#2}{#2}{#1}%
+\def\filemod@oldest#1#2#3{%
+    \filemod@@cmp<{#1}{#2}{#3}{#2}{#3}%
 }
 
 
@@ -119,10 +111,63 @@
     \filemod@oldest{#2}%
 }
 
+%%%%%%%  Expandable, groups
+
+\def\filemodNewest#1#{%
+  \expandafter\expandafter
+  \expandafter\@filemodNewest
+  \csname
+    @%
+  \ifx\@nnil#1\@nnil
+    first%
+  \else
+    second%
+  \fi
+    oftwo%
+  \endcsname
+    {\filemodcmpdefault}%
+    {#1}%
+}
+
+\def\@filemodNewest#1#2{%
+    \@@filemodNewest{#1}#2\filemod@end
+}
+
+\def\@@filemodNewest#1#2{%
+    \filemod@Newest{#2}{#1}%
+}
+
+\def\filemodOldest#1#{%
+  \expandafter\expandafter
+  \expandafter\@filemodOldest
+  \csname
+    @%
+  \ifx\@nnil#1\@nnil
+    first%
+  \else
+    second%
+  \fi
+    oftwo%
+  \endcsname
+    {\filemodcmpdefault}%
+    {#1}%
+}
+
+\def\@filemodOldest#1#2{%
+    \@@filemodOldest{#1}#2\filemod@end
+}
+
+\def\@@filemodOldest#1#2{%
+    \filemod@Oldest{#2}{#1}%
+}
+
+\def\filemodOldest#1{%
+  \filemod@Oldest#1\filemod@end
+}
 
 
-\def\filemod@Newest#1#2{%
-  \iffilemod@end{#2}%
+\def\filemod@Newest#1#2#3{%
+  \iffilemod@end{#3}%
     {#1}%
     {%
     \expandafter\expandafter
@@ -135,8 +180,29 @@
     \expandafter{%
     \expandafter\expandafter
     \expandafter\@gobble
-    \expandafter\string\csname\filemod@newest{#1}{#2}\endcsname}}%
+    \expandafter\string\csname\filemod@@cmp>{#2}{#1}{#3}{#1}{#3}\endcsname}{#2}}%
 }
+
+
+
+\def\filemod@Oldest#1#2#3{%
+  \iffilemod@end{#3}%
+    {#1}%
+    {%
+    \expandafter\expandafter
+    \expandafter\expandafter
+    \expandafter\expandafter
+    \expandafter\filemod@Oldest
+    \expandafter\expandafter
+    \expandafter\expandafter
+    \expandafter\expandafter
+    \expandafter{%
+    \expandafter\expandafter
+    \expandafter\@gobble
+    \expandafter\string\csname\filemod@@cmp<{#2}{#1}{#3}{#1}{#3}\endcsname}{#2}}%
+}
+
+
 \def\filemod@Oldest#1#2{%
   \iffilemod@end{#2}%
     {#1}%
@@ -202,22 +268,24 @@
     \filemod@cmp{#2}%
 }
 
-\def\filemod@cmp#1#2#3{%
+\def\filemod@cmp{\filemod@@cmp>}
+
+\def\filemod@@cmp#1#2#3#4{%
     \ifcase0%
-        \ifnum\filemodnumdate{#3}>\filemodnumdate{#2}\space1\else
-            \ifnum\filemodnumdate{#3}=\filemodnumdate{#2}\space
-                \ifnum\filemodnumtime{#3}>\filemodnumtime{#2}\space1\else
-                    \ifnum\filemodnumdate{#3}=\filemodnumdate{#2}\space2\fi
+        \ifnum\filemodnumdate{#4}#1\filemodnumdate{#3}\space1\else
+            \ifnum\filemodnumdate{#4}=\filemodnumdate{#3}\space
+                \ifnum\filemodnumtime{#4}#1\filemodnumtime{#3}\space1\else
+                    \ifnum\filemodnumdate{#4}=\filemodnumdate{#3}\space2\fi
                 \fi
             \fi
         \fi
     \space
        \csname\ifnum#1>2 @firstofthree\else @firstoftwo\fi\expandafter\endcsname
     \or
-       \csname\ifnum#1>2 @secondofthree\else @secondoftwo\fi\expandafter\endcsname
+       \csname\ifnum#2>2 @secondofthree\else @secondoftwo\fi\expandafter\endcsname
     \else
        \csname
-       \ifcase#1
+       \ifcase#2
          @gobbletwo%
        \or
          @firstoftwo%
