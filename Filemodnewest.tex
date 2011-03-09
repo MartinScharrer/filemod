@@ -1,0 +1,43 @@
+%&pdflatex
+\documentclass{article}
+
+\usepackage{filemod}
+
+\begin{document}
+\begingroup
+\ttfamily
+
+\def\test#1{%
+  #1%
+  \def\TESTSTR{#1}%
+  \par\bigskip
+  \par\noindent
+  \message{^^J%
+  \meaning\TESTSTR^^J%
+  \meaning\filemodcmpfile
+  ^^J}%
+}
+
+\test{\FilemodNewest{{file1}{file2}{file3}{file4}{file5}{file6}}}%
+\test{\FilemodNewest{{file3}{file6}{file5}{file4}{file1}{file2}}}%
+\test{\FilemodNewest{{FILE3}{FILE6}{FILE5}{FILE4}{FILE1}{FILE2}}}%
+\test{\FilemodNewest[1]{{FILE3}{FILE6}{FILE5}{FILE4}{FILE1}{FILE2}}}%
+\test{\FilemodNewest[2]{{FILE3}{FILE6}{FILE5}{FILE4}{FILE1}{FILE2}}}%
+\test{\FilemodOldest{{file1}{file6}{file3}{file4}{file5}{file6}}}%
+\test{\FilemodOldest{{file3}{file6}{file5}{file4}{file1}{file2}}}%
+\test{\FilemodOldest{{FILE3}{FILE6}{FILE5}{FILE4}{FILE1}{FILE2}}}%
+\test{\FilemodOldest[1]{{FILE3}{FILE6}{FILE5}{FILE4}{FILE1}{FILE2}}}%
+\test{\FilemodOldest[2]{{FILE3}{FILE6}{FILE5}{FILE4}{FILE1}{FILE2}}}%
+
+\endgroup
+\end{document}
+%\tracingall
+\test {\filemodnewest{filea}{fileb}}
+\test {\filemodNewest{{filea}{fileb}{filec}{filed}{filee}}}
+
+\test {\filemodoldest{filea}{fileb}}
+\test {\filemodOldest{{filea}{fileb}{filec}{filed}{filee}}}
+
+\endgroup
+\end{document}
+

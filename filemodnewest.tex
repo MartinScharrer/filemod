@@ -1,0 +1,39 @@
+%&pdflatex
+\documentclass{article}
+
+\usepackage{filemod}
+
+\begin{document}
+\begingroup
+\ttfamily
+
+\def\test#1{%
+  \def\TESTSTR{#1}%
+  \edef\TEST{#1}%
+  \par\bigskip
+  \par\noindent
+  \message{^^J%
+  \meaning\TESTSTR^^J%
+  \meaning\TEST
+  ^^J}%
+  \meaning\TEST\\
+  \TEST
+}
+
+\test{\filemodNewest{{file1}{file2}{file3}{file4}{file5}{file6}}}%
+\test{\filemodNewest{{file3}{file2}{file5}{file4}{file1}{file6}}}%
+\test{\filemodOldest{{file1}{file2}{file3}{file4}{file5}{file6}}}%
+\test{\filemodOldest{{file3}{file2}{file5}{file4}{file1}{file6}}}%
+
+\endgroup
+\end{document}
+%\tracingall
+\test {\filemodnewest{filea}{fileb}}
+\test {\filemodNewest{{filea}{fileb}{filec}{filed}{filee}}}
+
+\test {\filemodoldest{filea}{fileb}}
+\test {\filemodOldest{{filea}{fileb}{filec}{filed}{filee}}}
+
+\endgroup
+\end{document}
+
