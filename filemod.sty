@@ -82,30 +82,37 @@
 
 
 % Expandable form
-\def\filemodnewest#1{%
-    \ifx[#1%
-      \expandafter\filemod@newest@opt
-    \else
-      \expandafter\filemod@newest
+\def\filemodnewest{%
+    \filemod@opt\filemod@newest@opt\filemod@newest
+}
+
+\def\filemod@opt#1#2#3{%
+    \expandafter
+    \remove@to@nnil@exec
+    \ifx[#3\@nnil\remove@to@nnil
+      \expandafter#1%
+    \else\@nnil\empty
+      \expandafter#2%
       \expandafter\filemodcmpdefault
     \fi
-    {#1}%
+    {#3}%
 }
+
+\def\remove@to@nnil@exec#1\@nnil#2{%
+    \ifx\@nnil#1\@nnil\else
+      \expandafter#2
+    \fi
+}
+
 
 \def\filemod@newest@opt#1#2]{%
     \filemod@newest{#2}%
 }
 
-
-\def\filemodoldest#1{%
-    \ifx[#1%
-      \expandafter\filemod@oldest@opt
-    \else
-      \expandafter\filemod@oldest
-      \expandafter\filemodcmpdefault
-    \fi
-    {#1}%
+\def\filemodoldest{%
+    \filemod@opt\filemod@oldest@opt\filemod@oldest
 }
+
 
 \def\filemod@oldest@opt#1#2]{%
     \filemod@oldest{#2}%
@@ -232,14 +239,8 @@
 
 
 % Expandable form
-\def\filemodcmp#1{%
-    \ifx[#1%
-      \expandafter\filemod@cmp@opt
-    \else
-      \expandafter\filemod@cmp
-      \expandafter\filemodcmpdefault
-    \fi
-    {#1}%
+\def\filemodcmp{%
+    \filemod@opt\filemod@cmp@opt\filemod@cmp
 }
 
 \def\filemodcmpdefault{1}
