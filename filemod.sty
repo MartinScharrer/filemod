@@ -195,6 +195,52 @@
 \def\@secondofthree#1#2#3{#2}
 
 
+\def\Filemodnewest#1#2{\FilemodOldest{{#1}{#2}}}
+\def\Filemodoldest#1#2{\FilemodNewest{{#1}{#2}}}
+
+\newcommand*\FilemodOldest[2][1]{%
+    \def\filemode@tie{#1}%
+    \def\filemod@gl{<}%
+    \Filemod@Newest#2\filemod@end
+}
+
+\newcommand*\FilemodNewest[2][1]{%
+    \def\filemode@tie{#1}%
+    \def\filemod@gl{>}%
+    \Filemod@Newest#2\filemod@end
+}
+
+\def\Filemod@Newest#1{%
+    \def\filemodcmpfile{#1}%
+    \filemodgetnum{#1}%
+    \let\filemodcmpdate\filemoddate
+    \let\filemodcmptime\filemodtime
+    \Filemod@@Newest
+}
+\def\Filemod@@Newest#1{%
+  \iffilemod@end{#1}{}{%
+    \filemodgetnum{#1}%
+    \ifcase0%
+        \ifnum\filemoddate\filemod@gl\filemodcmpdate\space1\else
+            \ifnum\filemoddate=\filemodcmpdate\space
+                \ifnum\filemodtime\filemod@gl\filemodcmptime\space1\else
+                    \ifnum\filemoddate=\filemodcmpdate\space
+                        \ifnum\filemode@tie=1\else 1\fi
+                    \fi
+                \fi
+            \fi
+        \fi
+    \else
+        \def\filemodcmpfile{#1}%
+        \let\filemodcmpdate\filemoddate
+        \let\filemodcmptime\filemodtime
+    \fi
+    \Filemod@@Newest
+  }%
+}
+
+\def\filemod@gl{>}
+
 \newcommand\Filemodcmp[1][1]{%
     \def\filemod@next{\filemodcmpresult}%
     \Filemod@cmp{#1}%
@@ -204,6 +250,8 @@
     \let\filemod@next\empty
     \Filemod@cmp{#1}%
 }
+
+
 
 \def\Filemod@cmp#1#2#3{%
     \filemodgetnum{#2}%
