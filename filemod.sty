@@ -125,11 +125,11 @@
   \fi
     oftwo%
   \endcsname
-    {\filemodcmpdefault}%
+    {[\filemodcmpdefault]}%
     {#1}%
 }
 
-\def\@filemodNewest#1#2{%
+\def\@filemodNewest[#1]#2{%
     \@@filemodNewest{#1}#2\filemod@end
 }
 
@@ -149,20 +149,16 @@
   \fi
     oftwo%
   \endcsname
-    {\filemodcmpdefault}%
+    {[\filemodcmpdefault]}%
     {#1}%
 }
 
-\def\@filemodOldest#1#2{%
+\def\@filemodOldest[#1]#2{%
     \@@filemodOldest{#1}#2\filemod@end
 }
 
 \def\@@filemodOldest#1#2{%
     \filemod@Oldest{#2}{#1}%
-}
-
-\def\filemodOldest#1{%
-  \filemod@Oldest#1\filemod@end
 }
 
 
@@ -203,22 +199,6 @@
 }
 
 
-\def\filemod@Oldest#1#2{%
-  \iffilemod@end{#2}%
-    {#1}%
-    {%
-    \expandafter\expandafter
-    \expandafter\expandafter
-    \expandafter\expandafter
-    \expandafter\filemod@Oldest
-    \expandafter\expandafter
-    \expandafter\expandafter
-    \expandafter\expandafter
-    \expandafter{%
-    \expandafter\expandafter
-    \expandafter\@gobble
-    \expandafter\string\csname\filemod@oldest{#1}{#2}\endcsname}}%
-}
 
 \def\iffilemod@end#1{%
   \ifx\filemod@end#1%

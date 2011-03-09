@@ -22,12 +22,20 @@
 
 \test{\filemodNewest{{file1}{file2}{file3}{file4}{file5}{file6}}}%
 \test{\filemodNewest{{file3}{file2}{file5}{file4}{file1}{file6}}}%
+\test{\filemodNewest[1]{{file1}{file2}{file3}{file4}{file5}{file6}}}%
+\test{\filemodNewest[1]{{file3}{file2}{file5}{file4}{file1}{file6}}}%
+\test{\filemodNewest[2]{{file1}{file2}{file3}{file4}{file5}{file6}}}%
+\test{\filemodNewest[2]{{file3}{file2}{file5}{file4}{file1}{file6}}}%
 \test{\filemodOldest{{file1}{file2}{file3}{file4}{file5}{file6}}}%
 \test{\filemodOldest{{file3}{file2}{file5}{file4}{file1}{file6}}}%
+\test{\filemodOldest[1]{{file1}{file2}{file3}{file4}{file5}{file6}}}%
+\test{\filemodOldest[1]{{file3}{file2}{file5}{file4}{file1}{file6}}}%
+\test{\filemodOldest[2]{{file1}{file2}{file3}{file4}{file5}{file6}}}%
+\test{\filemodOldest[2]{{file3}{file2}{file5}{file4}{file1}{file6}}}%
 
+\tracingall
 \endgroup
 \end{document}
-%\tracingall
 \test {\filemodnewest{filea}{fileb}}
 \test {\filemodNewest{{filea}{fileb}{filec}{filed}{filee}}}
 
