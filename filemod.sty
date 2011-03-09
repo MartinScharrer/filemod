@@ -70,6 +70,8 @@
 %%%%%%%
 
 
+%%%%% ADVANCED FILE DATA COMPARISON
+
 \def\filemodNewest#1{%
   \filemod@newest#1\filemod@end
 }
@@ -82,12 +84,34 @@
 \def\filemod@newest#1#2{%
   \iffilemod@end{#2}%
     {#1}%
-    {\filemod@newest{\filemodnewest{#1}{#2}}}%
+    {%
+    \expandafter\expandafter
+    \expandafter\expandafter
+    \expandafter\expandafter
+    \expandafter\filemod@newest
+    \expandafter\expandafter
+    \expandafter\expandafter
+    \expandafter\expandafter
+    \expandafter{%
+    \expandafter\expandafter
+    \expandafter\@gobble
+    \expandafter\string\csname\filemodnewest{#1}{#2}\endcsname}}%
 }
 \def\filemod@oldest#1#2{%
   \iffilemod@end{#2}%
     {#1}%
-    {\filemod@oldest{\filemodoldest{#1}{#2}}}%
+    {%
+    \expandafter\expandafter
+    \expandafter\expandafter
+    \expandafter\expandafter
+    \expandafter\filemod@oldest
+    \expandafter\expandafter
+    \expandafter\expandafter
+    \expandafter\expandafter
+    \expandafter{%
+    \expandafter\expandafter
+    \expandafter\@gobble
+    \expandafter\string\csname\filemodoldest{#1}{#2}\endcsname}}%
 }
 
 \def\iffilemod@end#1{%
@@ -103,7 +127,7 @@
 \def\filemod@end{\@gobble{filemod@end}}
 
 
-%%%%% FILE DATA COMPARISON
+%%%%% BASIC FILE DATA COMPARISON
 
 % Expandable form
 \def\filemodcmp#1#2{%
