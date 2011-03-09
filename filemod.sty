@@ -13,15 +13,34 @@
     {\filemod@parse@#1\empty{#2}\relax}%
 }
 
-\def\filemodnotexists#1{%
-    #1{0000}{00}{00}{00}{00}{00}{Z}%
-}
 \begingroup
 \@makeother\D
+\@makeother\Z
 \@makeother:
 \gdef\filemod@parse@D:#1#2#3#4#5#6#7#8#9\relax{%
     \filemod@parse@@{{#1#2#3#4}{#5#6}{#7#8}}#9\relax
 }
+
+\gdef\filemodnotexists#1{%
+    #1{0000}{00}{00}{00}{00}{00}{Z}%
+}
+
+\gdef\filemodNumdate#1{%
+    \expandafter\filemod@Numdate\pdffilemoddate{#1}D:00000000000000Z\relax
+}
+\gdef\filemod@NumdateD:#1#2#3#4#5#6#7#8#9\relax{%
+    #1#2#3#4#5#6#7#8%
+}
+\gdef\filemodNumtime#1{%
+    \expandafter\filemod@Numtime\pdffilemoddate{#1}D:00000000000000Z\relax
+}
+\gdef\filemod@NumtimeD:#1#2#3#4#5#6#7#8#9\relax{%
+    \filemod@@Numtime#9\relax
+}
+\gdef\filemod@@Numtime#1#2#3#4#5#6#7\relax{%
+    #1#2#3#4#5#6%
+}
+\expandafter\gdef\csname filemodZ\endcsname{Z}%
 \endgroup
 \def\filemod@parse@@#1#2#3#4#5#6#7#8\empty#9\relax{%
     #9#1{#2#3}{#4#5}{#6#7}{#8}%
@@ -57,6 +76,7 @@
 %%%% NUMERIC RESULTS
 \def\filemodnumdate{\filemodparse\filemod@numdate}
 \def\filemod@numdate#1#2#3#4#5#6#7{#1#2#3}
+
 
 \def\filemodnumtime{\filemodparse\filemod@numtime}
 \def\filemod@numtime#1#2#3#4#5#6#7{#4#5#6}
@@ -225,9 +245,9 @@
 % Expandable form
 \def\filemodCmp#1#2{%
     \ifcase0%
-        \ifnum\filemodnumdate{#2}>\filemodnumdate{#1}\space1\else
-            \ifnum\filemodnumdate{#2}=\filemodnumdate{#1}\space
-                \ifnum\filemodnumtime{#2}>\filemodnumtime{#1}\space1\fi
+        \ifnum\filemodNumdate{#2}>\filemodNumdate{#1}\space1\else
+            \ifnum\filemodNumdate{#2}=\filemodNumdate{#1}\space
+                \ifnum\filemodNumtime{#2}>\filemodNumtime{#1}\space1\fi
             \fi
         \fi
     \space
