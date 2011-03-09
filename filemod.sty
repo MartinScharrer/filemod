@@ -79,8 +79,47 @@
 \def\filemodOldest#1{%
   \filemod@Oldest#1\filemod@end
 }
-\def\filemodnewest#1#2{\filemodcmp{#1}{#2}{#1}{#2}}
-\def\filemodoldest#1#2{\filemodcmp{#1}{#2}{#2}{#1}}
+
+\def\filemod@newest#1#2{%
+  \filemodcmp{#1}{#2}{#1}{#2}%
+}
+
+\def\filemod@oldest#1#2{%
+  \filemodcmp{#1}{#2}{#2}{#1}%
+}
+
+
+% Expandable form
+\def\filemodnewest#1{%
+    \ifx[#1%
+      \expandafter\filemod@newest@opt
+    \else
+      \expandafter\filemod@newest
+      \expandafter\filemodcmpdefault
+    \fi
+    {#1}%
+}
+
+\def\filemod@newest@opt#1#2]{%
+    \filemod@newest{#2}%
+}
+
+
+\def\filemodoldest#1{%
+    \ifx[#1%
+      \expandafter\filemod@oldest@opt
+    \else
+      \expandafter\filemod@oldest
+      \expandafter\filemodcmpdefault
+    \fi
+    {#1}%
+}
+
+\def\filemod@oldest@opt#1#2]{%
+    \filemod@oldest{#2}%
+}
+
+
 
 \def\filemod@Newest#1#2{%
   \iffilemod@end{#2}%
@@ -96,7 +135,7 @@
     \expandafter{%
     \expandafter\expandafter
     \expandafter\@gobble
-    \expandafter\string\csname\filemodnewest{#1}{#2}\endcsname}}%
+    \expandafter\string\csname\filemod@newest{#1}{#2}\endcsname}}%
 }
 \def\filemod@Oldest#1#2{%
   \iffilemod@end{#2}%
@@ -112,7 +151,7 @@
     \expandafter{%
     \expandafter\expandafter
     \expandafter\@gobble
-    \expandafter\string\csname\filemodoldest{#1}{#2}\endcsname}}%
+    \expandafter\string\csname\filemod@oldest{#1}{#2}\endcsname}}%
 }
 
 \def\iffilemod@end#1{%
@@ -149,21 +188,21 @@
 % Expandable form
 \def\filemodcmp#1{%
     \ifx[#1%
-      \expandafter\filemod@Cmp@opt
+      \expandafter\filemod@cmp@opt
     \else
-      \expandafter\filemod@Cmp
-      \expandafter\filemodCmpdefault
+      \expandafter\filemod@cmp
+      \expandafter\filemodcmpdefault
     \fi
     {#1}%
 }
 
-\def\filemodCmpdefault{1}
+\def\filemodcmpdefault{1}
 
-\def\filemod@Cmp@opt#1#2]{%
-    \filemod@Cmp{#2}%
+\def\filemod@cmp@opt#1#2]{%
+    \filemod@cmp{#2}%
 }
 
-\def\filemod@Cmp#1#2#3{%
+\def\filemod@cmp#1#2#3{%
     \ifcase0%
         \ifnum\filemodnumdate{#3}>\filemodnumdate{#2}\space1\else
             \ifnum\filemodnumdate{#3}=\filemodnumdate{#2}\space
