@@ -33,14 +33,39 @@
 \test{\filemodOldest[2]{{file1}{file2}{file3}{file4}{file5}{file6}}}%
 \test{\filemodOldest[2]{{file3}{file2}{file5}{file4}{file1}{file6}}}%
 
-\tracingall
-\endgroup
-\end{document}
+
+\def\FILEA{filea}
+\def\FILEB{fileb}
 \test {\filemodnewest{filea}{fileb}}
-\test {\filemodNewest{{filea}{fileb}{filec}{filed}{filee}}}
+\test {\filemodnewest\FILEA{fileb}}
+\test {\filemodnewest{filea}\FILEB}
+\test {\filemodnewest\FILEA\FILEB}
+
+\test {\filemodnewest[1]{filea}{fileb}}
+\test {\filemodnewest[1]\FILEA{fileb}}
+\test {\filemodnewest[1]{filea}\FILEB}
+\test {\filemodnewest[1]\FILEA\FILEB}
+
+\test {\filemodnewest[2]{filea}{fileb}}
+\test {\filemodnewest[2]\FILEA{fileb}}
+\test {\filemodnewest[2]{filea}\FILEB}
+\test {\filemodnewest[2]\FILEA\FILEB}
+
+\test {\filemodnewest[1]{filea}{fileA}}
+\test {\filemodnewest[1]\FILEA{fileA}}
+\test {\filemodnewest[1]{fileA}\FILEA}
+\test {\filemodnewest[1]\FILEA\FILEA}
+
+\test {\filemodnewest[2]{filea}{fileA}}
+\test {\filemodnewest[2]\FILEA{fileA}}
+\test {\filemodnewest[2]{fileA}\FILEA}
+\test {\filemodnewest[2]\FILEA\FILEA}
 
 \test {\filemodoldest{filea}{fileb}}
-\test {\filemodOldest{{filea}{fileb}{filec}{filed}{filee}}}
+\test {\filemodoldest\FILEA{fileb}}
+\test {\filemodoldest{filea}\FILEB}
+\test {\filemodoldest\FILEA\FILEB}
+
 
 \endgroup
 \end{document}
