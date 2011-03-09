@@ -72,23 +72,24 @@
 
 %%%%% ADVANCED FILE DATA COMPARISON
 
-\def\filemodNewest#1{%
-  \filemod@newest#1\filemod@end
+
+\def\filemod@Newest#1#2{%
+  \filemod@Newest#1\filemod@end
 }
 \def\filemodOldest#1{%
-  \filemod@oldest#1\filemod@end
+  \filemod@Oldest#1\filemod@end
 }
 \def\filemodnewest#1#2{\filemodcmp{#1}{#2}{#1}{#2}}
 \def\filemodoldest#1#2{\filemodcmp{#1}{#2}{#2}{#1}}
 
-\def\filemod@newest#1#2{%
+\def\filemod@Newest#1#2{%
   \iffilemod@end{#2}%
     {#1}%
     {%
     \expandafter\expandafter
     \expandafter\expandafter
     \expandafter\expandafter
-    \expandafter\filemod@newest
+    \expandafter\filemod@Newest
     \expandafter\expandafter
     \expandafter\expandafter
     \expandafter\expandafter
@@ -97,14 +98,14 @@
     \expandafter\@gobble
     \expandafter\string\csname\filemodnewest{#1}{#2}\endcsname}}%
 }
-\def\filemod@oldest#1#2{%
+\def\filemod@Oldest#1#2{%
   \iffilemod@end{#2}%
     {#1}%
     {%
     \expandafter\expandafter
     \expandafter\expandafter
     \expandafter\expandafter
-    \expandafter\filemod@oldest
+    \expandafter\filemod@Oldest
     \expandafter\expandafter
     \expandafter\expandafter
     \expandafter\expandafter
