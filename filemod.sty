@@ -73,7 +73,7 @@
 %%%%% ADVANCED FILE DATA COMPARISON
 
 
-\def\filemod@Newest#1#2{%
+\def\filemodNewest#1#2{%
   \filemod@Newest#1\filemod@end
 }
 \def\filemodOldest#1{%
@@ -131,7 +131,7 @@
 %%%%% BASIC FILE DATA COMPARISON
 
 % Expandable form
-\def\filemodcmp#1#2{%
+\def\filemodCmp#1#2{%
     \ifcase0%
         \ifnum\filemodnumdate{#2}>\filemodnumdate{#1}\space1\else
             \ifnum\filemodnumdate{#2}=\filemodnumdate{#1}\space
@@ -147,7 +147,7 @@
 
 
 % Expandable form
-\def\filemodCmp#1{%
+\def\filemodcmp#1{%
     \ifx[#1%
       \expandafter\filemod@Cmp@opt
     \else
