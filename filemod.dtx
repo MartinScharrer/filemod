@@ -44,7 +44,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{551}
+% \CheckSum{555}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -77,7 +77,6 @@
 %
 % \section{Introduction}
 %
-% Put text here.
 %
 % \section{Usage}
 %
@@ -102,10 +101,6 @@
 % Note if this macro contains non-expandable code the macros which uses it aren't expandable anymore.
 %
 %
-% \DescribeMacro{\filemodNumdate}
-%
-%
-% \DescribeMacro{\filemodNumtime}
 %
 %
 % \subsection{Print File Modification Date and Time}
@@ -141,9 +136,19 @@
 %
 % \DescribeMacro{\filemodnumdate}{<filename>}
 % Expands to an integer of the form |YYYYMMDD| which can be used for numeric comparisons like `|\ifnum`.
+% This macros uses `|\filemodparse` and `|\filemodnotexists` will be used if the file does not exist.
 %
 % \DescribeMacro{\filemodnumtime}{<filename>}
 % Expands to an integer of the form |HHmmSS| which can be used for numeric comparisons like `|\ifnum`.
+% This macros uses `|\filemodparse` and `|\filemodnotexists` will be used if the file does not exist.
+%
+% \DescribeMacro{\filemodNumdate}{<filename>}
+% Expands to an integer of the form |YYYYMMDD| which can be used for numeric comparisons like `|\ifnum`.
+% Parses the file modification date by itself and will return |00000000| if the file does not exist.
+%
+% \DescribeMacro{\filemodNumtime}{<filename>}
+% Expands to an integer of the form |HHmmSS| which can be used for numeric comparisons like `|\ifnum`.
+% Parses the file modification date by itself and will return |000000| if the file does not exist.
 %
 %
 % \DescribeMacro{\filemodgetnum}{<filename>}
@@ -188,22 +193,22 @@
 % Same as `|\filemodOldest` just not expandable but faster.
 %
 %
-%
-%
-% \DescribeMacro{\filemodCmp}{<filename 1>}{<filename 2>}{<clause 1>}{<clause 2>}
-% This is a simpler and therefore faster version of `|\filemodcmp`. It is fully expandable, does not take any optional
-% arguments and will always expand to the first clause if both file modification dates are equal (or both files do not exist.
-%
-%
 % \def\optional{\color{black!25}\colorlet{meta}{meta!50!black!25}}
 % \DescribeMacro{\filemodcmp}[<num>]{<filename 1>}{<filename 2>}{<clause 1>}{<clause 2>}!\optional!{<clause 3>}
 % This macro compares the file modification date and time of the two given files and expands to the clause of the
 % newest file. An numerical optional argument can be given to determine the outcome if both files have the exact same 
 % modification date/time (or both do not exists). If `<num>` is 0, no clause will be expanded, i.e.\ the macro expands
 % to an empty text. If `<num>` is 1 (default) or 2 the macro expands to the corresponding clause.
-% However if `<num>` is 3, the macro will await a hird clause and expands to it if both files modification dates are equal.
+% However if `<num>` is 3, the macro will await a third clause and expands to it if both files modification dates are equal.
 %
 % This macro is fully expandable even when the optional argument is used. However, `<filename 1>` must not be equal to "[".
+%
+%
+% \DescribeMacro{\filemodCmp}{<filename 1>}{<filename 2>}{<clause 1>}{<clause 2>}
+% This is a simpler and therefore faster version of `|\filemodcmp`. It is fully expandable, does not take any optional
+% arguments and will always expand to the first clause if both file modification dates are equal (or both files do not exist).
+% The `|\filemodNumdate` and `|\filemodNumtime` macros are used in the comparison.
+%
 %
 % \DescribeMacro{\Filemodcmp}[<num>]{<filename 1>}{<filename 2>}{<clause 1>}{<clause 2>}!\optional!{<clause 3>}
 % This macro provides the same functionality as `|\filemodcmp`.
@@ -245,7 +250,7 @@
 % \begin{macro}{\filemodparse}
 %%%% BASIC PARSER
 %    \begin{macrocode}
-\def\filemodparse#1#2{%
+\newcommand*\filemodparse[2]{%
     \expandafter\filemod@parse\pdffilemoddate{#2}\relax{#1}%
 }
 %    \end{macrocode}
@@ -359,28 +364,28 @@
 %
 % \begin{macro}{\filemodprint}
 %    \begin{macrocode}
-\def\filemodprint{\filemodparse\thefilemod}
+\newcommand*\filemodprint{\filemodparse\thefilemod}
 %    \end{macrocode}
 % \end{macro}
 %
 %
 % \begin{macro}{\filemodprintdate}
 %    \begin{macrocode}
-\def\filemodprintdate{\filemodparse\the@filemoddate}
+\newcommand*\filemodprintdate{\filemodparse\the@filemoddate}
 %    \end{macrocode}
 % \end{macro}
 %
 %
 % \begin{macro}{\filemodprinttime}
 %    \begin{macrocode}
-\def\filemodprinttime{\filemodparse\the@filemodtime}
+\newcommand*\filemodprinttime{\filemodparse\the@filemodtime}
 %    \end{macrocode}
 % \end{macro}
 %
 %
 % \begin{macro}{\thefilemod}
 %    \begin{macrocode}
-\def\thefilemod#1#2#3#4#5#6#7{%
+\newcommand*\thefilemod[7]{%
     \thefilemoddate{#1}{#2}{#3}%
     \filemodsep
     \thefilemodtime{#4}{#5}{#6}{#7}%
@@ -394,7 +399,7 @@
 %
 % \begin{macro}{\thefilemoddate}
 %    \begin{macrocode}
-\def\thefilemoddate#1#2#3{%
+\newcommand*\thefilemoddate[3]{%
     #1/#2/#3%
 }
 %    \end{macrocode}
@@ -403,7 +408,7 @@
 %
 % \begin{macro}{\thefilemodtime}
 %    \begin{macrocode}
-\def\thefilemodtime#1#2#3#4{%
+\newcommand*\thefilemodtime[4]{%
     #1:#2:#3~#4%
 }
 %    \end{macrocode}
@@ -433,7 +438,7 @@
 % \begin{macro}{\filemodnumdate}
 %%%% NUMERIC RESULTS
 %    \begin{macrocode}
-\def\filemodnumdate{\filemodparse\filemod@numdate}
+\newcommand*\filemodnumdate{\filemodparse\filemod@numdate}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -447,7 +452,7 @@
 %
 % \begin{macro}{\filemodnumtime}
 %    \begin{macrocode}
-\def\filemodnumtime{\filemodparse\filemod@numtime}
+\newcommand*\filemodnumtime{\filemodparse\filemod@numtime}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -461,7 +466,7 @@
 %
 % \begin{macro}{\filemodgetnum}
 %    \begin{macrocode}
-\def\filemodgetnum{\filemodparse\filemod@getnum}
+\newcommand*\filemodgetnum{\filemodparse\filemod@getnum}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -502,7 +507,7 @@
 % \begin{macro}{\filemodnewest}
 % Expandable form
 %    \begin{macrocode}
-\def\filemodnewest{%
+\newcommand*\filemodnewest{%
     \filemod@opt\filemod@newest@opt\filemod@newest
 }
 %    \end{macrocode}
@@ -548,7 +553,7 @@
 %
 % \begin{macro}{\filemodoldest}
 %    \begin{macrocode}
-\def\filemodoldest{%
+\newcommand*\filemodoldest{%
     \filemod@opt\filemod@oldest@opt\filemod@oldest
 }
 %    \end{macrocode}
@@ -568,6 +573,7 @@
 %
 % \begin{macro}{\filemodNewest}
 %    \begin{macrocode}
+\newcommand*\filemodNewest{}
 \def\filemodNewest#1#{%
   \expandafter\expandafter
   \expandafter\@filemodNewest
@@ -607,6 +613,7 @@
 %
 % \begin{macro}{\filemodOldest}
 %    \begin{macrocode}
+\newcommand*\filemodOldest{}
 \def\filemodOldest#1#{%
   \expandafter\expandafter
   \expandafter\@filemodOldest
@@ -713,7 +720,7 @@
 % \begin{macro}{\filemodCmp}
 % Expandable form
 %    \begin{macrocode}
-\def\filemodCmp#1#2{%
+\newcommand*\filemodCmp[2]{%
     \ifcase0%
         \ifnum\filemodNumdate{#2}>\filemodNumdate{#1}\space1\else
             \ifnum\filemodNumdate{#2}=\filemodNumdate{#1}\space
@@ -733,7 +740,7 @@
 % \begin{macro}{\filemodcmp}
 % Expandable form
 %    \begin{macrocode}
-\def\filemodcmp{%
+\newcommand*\filemodcmp{%
     \filemod@opt\filemod@cmp@opt\filemod@cmp
 }
 %    \end{macrocode}
@@ -742,7 +749,7 @@
 %
 % \begin{macro}{\filemodcmpdefault}
 %    \begin{macrocode}
-\def\filemodcmpdefault{1}
+\newcommand*\filemodcmpdefault{1}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -813,14 +820,14 @@
 %
 % \begin{macro}{\Filemodnewest}
 %    \begin{macrocode}
-\def\Filemodnewest#1#2{\FilemodOldest{{#1}{#2}}}
+\newcommand*\Filemodnewest[2]{\FilemodNewest{{#1}{#2}}}
 %    \end{macrocode}
 % \end{macro}
 %
 %
 % \begin{macro}{\Filemodoldest}
 %    \begin{macrocode}
-\def\Filemodoldest#1#2{\FilemodNewest{{#1}{#2}}}
+\newcommand*\Filemodoldest[2]{\FilemodOldest{{#1}{#2}}}
 %    \end{macrocode}
 % \end{macro}
 %
