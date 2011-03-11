@@ -76,33 +76,32 @@
 %
 % \maketitle
 %
+% \begin{abstract}
+%   This package provides macros to read and compare the modification dates of files.
+%   This files can be |.tex| files, images or other files as long as they can be found by the \LaTeX\ compiler.
+%   It uses the |\pdffilemoddate| primitive of pdf\LaTeX\ to receive the file modification date as PDF
+%   date string, parses it and returns the value to the user.
+%   This package will also work for DVI output with recent versions of the \LaTeX\ compiler which uses pdf\LaTeX\ in DVI mode.
+%   The functionality is provided by purely expandable macros or by faster but non-expandable ones.
+% \end{abstract}
+%
 % \section{Introduction}
+% This package provides several macros to read and compare the modification dates of files.
+% The same functionality is provided by two groups of macros:
+% The macros of the first group all start with a lower case letter and are fully expandable.
+% This means they can be used in places where a string must be provided, like in `|\input' or `|\includegraphics`.
+% Because assignments are not expandable some of these macros, like the ones for comparisons, need to reread and re-parse the
+% file modification dates if they are required in more than one place inside the macro.
 %
+% The macros of the second group all start with a upper case letter and are not expandable because assignments are used internally.
+% However, this allows techniques which speed up the processing of these macros, making this macros faster than the expandable counterparts.
+% If expandability is not required these macros should be preferred.
 %
-% \section{Usage}
-%
-% \DescribeMacro{\filemodparse}{<macro>}{<filename>}
-% Parses the file modification datetime of the given file and passes the result to the given macro.
-% The macro will receive seven arguments:
-% \begin{quote}
-% `<macro>{<YYYY>}{<MM>}{<DD>}{<HH>}{<mm>}{<SS>}{<TZ>}`
-% \end{quote}
-% i.e.\ year, month, day, hour, minutes, seconds and the timezone as signed offset
-% or `Z` (catcode 12).
-%
-%
-% \DescribeMacro{\filemodnotexists}{<macro>}
-% This macro will be called by `|\filemodparse` with the original given macro when the given file does not exists. By default
-% it contains all zeros except `Z` (catcode 12) as timezone:
-%
-% \begin{quote}
-% `!\#1!{0000}{00}{00}{00}{00}{00}{Z}`
-% \end{quote}
-% The user can redefine this macro to a different content, e.g.\ to a different fall-back value or to display a warning.
-% Note if this macro contains non-expandable code the macros which uses it aren't expandable anymore.
+% \section{Options and alternative Interface}
 %
 %
 %
+% \section{Macros}
 %
 % \subsection{Print File Modification Date and Time}
 %
@@ -152,7 +151,7 @@
 % Parses the file modification date by itself and will return |000000| if the file does not exist.
 %
 %
-% \DescribeMacro{\filemodgetnum}{<filename>}
+% \DescribeMacro{\Filemodgetnum}{<filename>}
 % Stores the file modification date and time as numbers (|YYYYMMDD| and |HHmmSS|) as well the timezone string
 % into the macros `|\filemoddate`, `|\filemodtime` and `|\filemodtz`.
 %
@@ -229,6 +228,37 @@
 % This macro can be redefined with a number or a numeric expression valid for |\ifcase|. It should not contain any
 % trailing spaces.
 %
+%
+% \subsection{Parsing of the file modification date}
+% The format returned by the |\pdffilemoddate| primitive is \enq{\texttt{D:}} followed by a number in the format \enq{YYYYMMDDHHmmSST} which needs to be parsed before
+% it is useful. An example is \enq{\pdffilemoddate} which is the file modification date of the source file of this manual.
+% Unfortunately this number is to large for TeX to be taken as an integer for numerical comparisons, so it is broken into two numbers (YYYYMMDD and HHmmSS) which are compared
+% in multiple steps.
+%
+% \DescribeMacro{\filemodparse}{<macro>}{<filename>}
+% Parses the file modification datetime of the given file and passes the result to the given macro.
+% The macro will receive seven arguments:
+% \begin{quote}
+% `<macro>{<YYYY>}{<MM>}{<DD>}{<HH>}{<mm>}{<SS>}{<TZ>}`
+% \end{quote}
+% i.e.\ year, month, day, hour, minutes, seconds and the timezone as signed offset
+% or `Z` (catcode 12).
+%
+%
+%
+% \DescribeMacro{\filemodnotexists}{<macro>}
+% This macro will be called by `|\filemodparse` with the original given macro when the given file does not exists. By default
+% it contains all zeros except `Z` (catcode 12) as timezone:
+%
+% \begin{quote}
+% `!\#1!{0000}{00}{00}{00}{00}{00}{Z}`
+% \end{quote}
+% The user can redefine this macro to a different content, e.g.\ to a different fall-back value or to display a warning.
+% Note if this macro contains non-expandable code the macros which uses it aren't expandable anymore.
+%
+%
+%
+% \subsection{Auxiliary Macros}
 %
 % \DescribeMacro{\filemodZ}
 % Defined to "Z" with catcode 12 as it is returned as timezone.
@@ -461,9 +491,9 @@
 % \end{macro}
 %
 %
-% \begin{macro}{\filemodgetnum}
+% \begin{macro}{\Filemodgetnum}
 %    \begin{macrocode}
-\newcommand*\filemodgetnum{\filemodparse\filemod@getnum}
+\newcommand*\Filemodgetnum{\filemodparse\filemod@getnum}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -711,9 +741,9 @@
 %    \begin{macrocode}
 \newcommand*\filemodCmp[2]{%
     \ifcase0%
-        \ifnum\filemodNumdate{#2}>\filemodNumdate{#1}\space1\else
-            \ifnum\filemodNumdate{#2}=\filemodNumdate{#1}\space
-                \ifnum\filemodNumtime{#2}>\filemodNumtime{#1}\space1\fi
+        \ifnum\filemodNumdate{#2}>\filemodNumdate{#1} 1\else
+            \ifnum\filemodNumdate{#2}=\filemodNumdate{#1} %
+                \ifnum\filemodNumtime{#2}>\filemodNumtime{#1} 1\fi
             \fi
         \fi
     \space
@@ -762,10 +792,10 @@
 %    \begin{macrocode}
 \def\filemod@@cmp#1#2#3#4{%
     \ifcase0%
-        \ifnum\filemodnumdate{#4}#1\filemodnumdate{#3}\space1\else
-            \ifnum\filemodnumdate{#4}=\filemodnumdate{#3}\space
-                \ifnum\filemodnumtime{#4}#1\filemodnumtime{#3}\space1\else
-                    \ifnum\filemodnumdate{#4}=\filemodnumdate{#3}\space2\fi
+        \ifnum\filemodnumdate{#4}#1\filemodnumdate{#3} 1\else
+            \ifnum\filemodnumdate{#4}=\filemodnumdate{#3} %
+                \ifnum\filemodnumtime{#4}#1\filemodnumtime{#3} 1\else
+                    \ifnum\filemodnumdate{#4}=\filemodnumdate{#3} 2\fi
                 \fi
             \fi
         \fi
@@ -846,7 +876,7 @@
 %    \begin{macrocode}
 \def\Filemod@Newest#1{%
     \def\filemodcmpfile{#1}%
-    \filemodgetnum{#1}%
+    \Filemodgetnum{#1}%
     \let\filemodcmpdate\filemoddate
     \let\filemodcmptime\filemodtime
     \Filemod@@Newest
@@ -859,7 +889,7 @@
 %    \begin{macrocode}
 \def\Filemod@@Newest#1{%
   \iffilemod@end{#1}{}{%
-    \filemodgetnum{#1}%
+    \Filemodgetnum{#1}%
     \ifcase0%
         \ifnum\filemoddate\filemod@gl\filemodcmpdate\space1\else
             \ifnum\filemoddate=\filemodcmpdate\space
@@ -912,10 +942,10 @@
 % \begin{macro}{\Filemod@cmp}
 %    \begin{macrocode}
 \def\Filemod@cmp#1#2#3{%
-    \filemodgetnum{#2}%
+    \Filemodgetnum{#2}%
     \let\filemoddatea\filemoddate
     \let\filemodtimea\filemodtime
-    \filemodgetnum{#3}%
+    \Filemodgetnum{#3}%
     \ifcase0%
         \ifnum\filemoddate>\filemoddatea\space1\else
             \ifnum\filemoddate=\filemoddatea\space
