@@ -45,7 +45,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{554}
+% \CheckSum{550}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -68,12 +68,9 @@
 %
 % \DoNotIndex{\newcommand,\newenvironment}
 %
-% \providecommand*{\url}{\texttt}
 % \GetFileInfo{filemod.dtx}
-% \title{The \textsf{filemod} package}
-% \author{Martin Scharrer \\ \url{martin@scharrer-online.de}}
-% \date{\fileversion~from \filedate}
-%
+% \author{Martin Scharrer}
+% \email{martin@scharrer-online.de}
 % \maketitle
 %
 % \begin{abstract}
@@ -89,7 +86,7 @@
 % This package provides several macros to read and compare the modification dates of files.
 % The same functionality is provided by two groups of macros:
 % The macros of the first group all start with a lower case letter and are fully expandable.
-% This means they can be used in places where a string must be provided, like in `|\input' or `|\includegraphics`.
+% This means they can be used in places where a string must be provided, like in `|\input` or `|\includegraphics`.
 % Because assignments are not expandable some of these macros, like the ones for comparisons, need to reread and re-parse the
 % file modification dates if they are required in more than one place inside the macro.
 %
@@ -193,7 +190,6 @@
 % Same as `|\filemodOldest` just not expandable but faster.
 %
 %
-% \def\optional{\color{black!25}\colorlet{meta}{meta!50!black!25}}
 % \DescribeMacro{\filemodcmp}[<num>]{<filename 1>}{<filename 2>}{<clause 1>}{<clause 2>}!\optional!{<clause 3>}
 % This macro compares the file modification date and time of the two given files and expands to the clause of the
 % newest file. An numerical optional argument can be given to determine the outcome if both files have the exact same 
@@ -218,7 +214,7 @@
 % \DescribeMacro{\FilemodCmp}[<num>]{<filename 1>}{<filename 2>}
 % This macro will compare the two file modification dates like `|\Filemodcmp` and `|\filemodcmp` but does not take
 % the possible clauses as arguments, instead it stores the result into the expandable macro `|\filemodcmpresult`
-% which then takes `{<clause 1>}{<clause 2>}` (and also `{<clause 3>}` if `<num>` was 3) as arguments and expand to the one
+% which then takes `{<clause~1>}!\linebreak[3]!{<clause~2>}` (and also `{<clause~3>}` if `<num>` was 3) as arguments and expand to the one
 % corresponding to the newest file.
 % This set of macros gives the user the speed benefit of `|\Filemodcmp` while still be able to use the result in an expandable context.
 %
@@ -231,7 +227,7 @@
 %
 % \subsection{Parsing of the file modification date}
 % The format returned by the |\pdffilemoddate| primitive is \enq{\texttt{D:}} followed by a number in the format \enq{YYYYMMDDHHmmSST} which needs to be parsed before
-% it is useful. An example is \enq{\pdffilemoddate} which is the file modification date of the source file of this manual.
+% it is useful. An example is \enq{\pdffilemoddate{\jobname}} which is the file modification date of the source file of this manual.
 % Unfortunately this number is to large for TeX to be taken as an integer for numerical comparisons, so it is broken into two numbers (YYYYMMDD and HHmmSS) which are compared
 % in multiple steps.
 %
@@ -277,6 +273,9 @@
 %<*package>
 % \fi
 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \subsection{Parser}
+%
 %
 % \begin{macro}{\filemodparse}
 %    \begin{macrocode}
@@ -301,6 +300,8 @@
 %    \end{macrocode}
 % \end{macro}
 %
+% The "D", ":" and "Z" characters are changed to catcode 12 because this is how they appear in the string
+% returned by `|\pdffilemoddate`.
 %    \begin{macrocode}
 \begingroup
 \@makeother\D
@@ -835,6 +836,9 @@
 %    \end{macrocode}
 % \end{macro}
 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \subsubsection{File Modification Date Comparison}
+%
 %
 % \begin{macro}{\Filemodnewest}
 %    \begin{macrocode}
@@ -988,7 +992,7 @@
 %    \end{macrocode}
 % \end{macro}
 %
-%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \iffalse
 %</package>
 % \fi
