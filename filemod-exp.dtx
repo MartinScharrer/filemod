@@ -203,7 +203,21 @@
 % \end{macro}
 %
 %
-% \begin{macro}{\filemod@opt}[3]{Macro to read optional argument when present}{Next macro which receives default optional argument as first normal argument}{\texttt{[} or first argument}
+% \begin{macro}{\filemod@opt}[3]{Macro to read optional argument when present}{Next macro which receives default optional argument as first normal argument}{\texttt{[} or first mandatory argument}
+% This macro checks if an optional argument is present. Here |#1| and |#2| are handlers and |#3| is the first balanced text which followed the macro, i.e.\ either "[" or the first
+% mandatory argument. There are three possible cases:
+% \begin{enumerate}
+%   \item The |\ifx| compares "[" and the first token of |#3|. If they do not match everything until and including |\else| is skipped.
+% Then |\remove@to@nnil@exec| is expanded which removes the following |\@nnil|. This leaves |\empty| and the rest of the \emph{false} clause.
+% The |\fi| is removed using |\expandafter| and the trailing |{#3}| is read by |#2| as normal argument.
+%   \item If |#3| is exactly "[" the |\ifx[#3| part is removed by \TeX. The |\remove@to@nnil@exec| removes the |\@nnil| and the |\remove@to@nnil| because there was nothing before |\@nnil|.
+% Therefore |\expandafter#1| is executed which triggers |\else| which removes everything up to and including |\fi|.
+% Then the optional argument handler |#1| is expanded which receives the "[" as "{[}" which is then gobbled.
+%   \item The |#3| starts with "[" but contains more material, i.e.\ was original a mandatory argument. Then |\ifx| expands to the \emph{true} clause and removes
+%   the first token of |#3|. The |\remove@to@nnil@exec| gobbles the rest of |#3| but reads and reinserts |\remove@to@nnil| which gobbles everything to the next |\@nnil|
+%   after |\else| and therefore jumps to the \emph{false} clause. This clause is executed like normal, i.e.\ |#2| is called with the default optional argument and |{#3}| as second argument.
+% \end{enumerate}
+%
 %    \begin{macrocode}
 \def\filemod@opt#1#2#3{%
     \expandafter
@@ -221,6 +235,7 @@
 %
 %
 % \begin{macro}{\remove@to@nnil@exec}
+% Removes everything to |\@nnil| and executes the next token except if |#1| was empty.
 %    \begin{macrocode}
 \def\remove@to@nnil@exec#1\@nnil#2{%
     \ifx\@nnil#1\@nnil\else
