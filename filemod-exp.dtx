@@ -1,0 +1,512 @@
+% \iffalse
+%<*exp>
+% \fi
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \subsection{Parser}
+%
+% \begin{macro}{\filemodparse}
+%    \begin{macrocode}
+\newcommand*\filemodparse[2]{%
+    \expandafter\filemod@parse\pdffilemoddate{#2}\relax{#1}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\filemod@parse}
+%    \begin{macrocode}
+\def\filemod@parse#1\relax#2{%
+    \ifx\relax#1\relax
+        \expandafter\@firstoftwo
+    \else
+        \expandafter\@secondoftwo
+    \fi
+    {\filemodnotexists{#2}}%
+    {\filemod@parse@#1\empty{#2}\relax}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% The "D", ":" and "Z" characters are changed to catcode 12 because this is how they appear in the string
+% returned by `|\pdffilemoddate`.
+%    \begin{macrocode}
+\begingroup
+\@makeother\D
+\@makeother\Z
+\@makeother:
+%    \end{macrocode}
+%
+% \begin{macro}{\filemod@parse@D:}
+%    \begin{macrocode}
+\gdef\filemod@parse@D:#1#2#3#4#5#6#7#8#9\relax{%
+    \filemod@parse@@{{#1#2#3#4}{#5#6}{#7#8}}#9\relax
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\filemodnotexists}
+%    \begin{macrocode}
+\gdef\filemodnotexists#1{%
+    #1{0000}{00}{00}{00}{00}{00}{Z}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\filemodZ}
+%    \begin{macrocode}
+\expandafter\gdef\csname filemodZ\endcsname{Z}%
+\let\filemodz=Z\relax
+%    \end{macrocode}
+% \end{macro}
+%
+%    \begin{macrocode}
+\endgroup
+%    \end{macrocode}
+%
+% \begin{macro}{\filemod@parse@@}
+%    \begin{macrocode}
+\def\filemod@parse@@#1#2#3#4#5#6#7#8\empty#9\relax{%
+    #9#1{#2#3}{#4#5}{#6#7}{#8}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+%
+% \begin{macro}{\filemodprint}
+%    \begin{macrocode}
+\newcommand*\filemodprint{\filemodparse\thefilemod}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\filemodprintdate}
+%    \begin{macrocode}
+\newcommand*\filemodprintdate{\filemodparse\the@filemoddate}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\filemodprinttime}
+%    \begin{macrocode}
+\newcommand*\filemodprinttime{\filemodparse\the@filemodtime}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\thefilemod}
+%    \begin{macrocode}
+\newcommand*\thefilemod[7]{%
+    \thefilemoddate{#1}{#2}{#3}%
+    \filemodsep
+    \thefilemodtime{#4}{#5}{#6}{#7}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%    \begin{macrocode}
+\let\filemodsep\space
+%    \end{macrocode}
+%
+% \begin{macro}{\thefilemoddate}
+%    \begin{macrocode}
+\newcommand*\thefilemoddate[3]{%
+    #1/#2/#3%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\thefilemodtime}
+%    \begin{macrocode}
+\newcommand*\thefilemodtime[4]{%
+    #1:#2:#3~#4%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\the@filemoddate}
+%    \begin{macrocode}
+\def\the@filemoddate#1#2#3#4#5#6#7{%
+    \thefilemoddate{#1}{#2}{#3}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\the@filemodtime}
+%    \begin{macrocode}
+\def\the@filemodtime#1#2#3{%
+    \thefilemodtime
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+%
+% \begin{macro}{\filemodnumdate}
+%    \begin{macrocode}
+\newcommand*\filemodnumdate{\filemodparse\filemod@numdate}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\filemod@numdate}
+%    \begin{macrocode}
+\def\filemod@numdate#1#2#3#4#5#6#7{#1#2#3}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\filemodnumtime}
+%    \begin{macrocode}
+\newcommand*\filemodnumtime{\filemodparse\filemod@numtime}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\filemod@numtime}
+%    \begin{macrocode}
+\def\filemod@numtime#1#2#3#4#5#6#7{#4#5#6}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\filemod@newest}
+%    \begin{macrocode}
+\def\filemod@newest#1#2#3{%
+    \filemod@@cmp>{#1}{#2}{#3}{#2}{#3}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\filemod@oldest}
+%    \begin{macrocode}
+\def\filemod@oldest#1#2#3{%
+    \filemod@@cmp<{#1}{#2}{#3}{#2}{#3}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\filemodnewest}
+%    \begin{macrocode}
+\newcommand*\filemodnewest{%
+    \filemod@opt\filemod@newest@opt\filemod@newest
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\filemod@opt}[3]{Macro to read optional argument when present}{Next macro which receives default optional argument as first normal argument}{\texttt{[} or first argument}
+%    \begin{macrocode}
+\def\filemod@opt#1#2#3{%
+    \expandafter
+    \remove@to@nnil@exec
+    \ifx[#3\@nnil\remove@to@nnil
+      \expandafter#1%
+    \else\@nnil\empty
+      \expandafter#2%
+      \expandafter\filemodcmpdefault
+    \fi
+    {#3}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\remove@to@nnil@exec}
+%    \begin{macrocode}
+\def\remove@to@nnil@exec#1\@nnil#2{%
+    \ifx\@nnil#1\@nnil\else
+      \expandafter#2
+    \fi
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\filemod@newest@opt}
+%    \begin{macrocode}
+\def\filemod@newest@opt#1#2]{%
+    \filemod@newest{#2}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\filemodoldest}
+%    \begin{macrocode}
+\newcommand*\filemodoldest{%
+    \filemod@opt\filemod@oldest@opt\filemod@oldest
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\filemod@oldest@opt}
+%    \begin{macrocode}
+\def\filemod@oldest@opt#1#2]{%
+    \filemod@oldest{#2}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \subsubsection{Newest and oldest file of a list of files}
+%
+% \begin{macro}{\filemodNewest}
+% Checks for an optional argument and substitutes the default if it is missing.
+%    \begin{macrocode}
+\newcommand*\filemodNewest{}
+\def\filemodNewest#1#{%
+  \expandafter\expandafter
+  \expandafter\@filemodNewest
+  \csname
+    @%
+  \ifx\@nnil#1\@nnil
+    first%
+  \else
+    second%
+  \fi
+    oftwo%
+  \endcsname
+    {[\filemodcmpdefault]}%
+    {#1}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\filemodOldest}
+% Like \Macro\filemodNewest but returns the oldest file in the given list.
+% It and its sub-macros are simply copies of minor changes of the |Newest| counterparts.
+% This is done for the benefit of expansion speed versus memory usage.
+% Future versions might use common code instead.
+%    \begin{macrocode}
+\newcommand*\filemodOldest{}
+\def\filemodOldest#1#{%
+  \expandafter\expandafter
+  \expandafter\@filemodOldest
+  \csname
+    @%
+  \ifx\@nnil#1\@nnil
+    first%
+  \else
+    second%
+  \fi
+    oftwo%
+  \endcsname
+    {[\filemodcmpdefault]}%
+    {#1}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\@filemodNewest}
+% Removes "[]" from first and braces from the second argument (the file name list).
+%    \begin{macrocode}
+\def\@filemodNewest[#1]#2{%
+    \@@filemodNewest{#1}#2\filemod@end
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\@filemodOldest}
+% Like \Macro\@filemodNewest.
+%    \begin{macrocode}
+\def\@filemodOldest[#1]#2{%
+    \@@filemodOldest{#1}#2\filemod@end
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\@@filemodNewest}
+% Reads the optional argument as |#1| and the first file name as |#2|.
+% It then reverses the order for the processing loop.
+%    \begin{macrocode}
+\def\@@filemodNewest#1#2{%
+    \filemod@Newest{#2}{#1}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\@@filemodOldest}
+%    \begin{macrocode}
+\def\@@filemodOldest#1#2{%
+    \filemod@Oldest{#2}{#1}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\filemod@Newest}[3]{First file name}{Optional argument}{Second file name}
+% Checks if the second file name is the end marker. In this case the first file name is returned (i.e.\ expanded to).
+% Otherwise expands the compare macro. This is done in one step using |\csname| which is then turned into a string
+% which |\| is gobbled. Because of the required expandability the |\escapechar| can't be changed.
+% Finally it calls itself recursively with the expanded result.
+%    \begin{macrocode}
+\def\filemod@Newest#1#2#3{%
+  \iffilemod@end{#3}%
+    {#1}%
+    {%
+    \expandafter\expandafter
+    \expandafter\expandafter
+    \expandafter\expandafter
+    \expandafter\filemod@Newest
+    \expandafter\expandafter
+    \expandafter\expandafter
+    \expandafter\expandafter
+    \expandafter{%
+    \expandafter\expandafter
+    \expandafter\@gobble
+    \expandafter\string\csname\filemod@@cmp>{#2}{#1}{#3}{#1}{#3}\endcsname}{#2}}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\filemod@Oldest}
+% Like \Macro\filemode@Newest but with different compare operator.
+%    \begin{macrocode}
+\def\filemod@Oldest#1#2#3{%
+  \iffilemod@end{#3}%
+    {#1}%
+    {%
+    \expandafter\expandafter
+    \expandafter\expandafter
+    \expandafter\expandafter
+    \expandafter\filemod@Oldest
+    \expandafter\expandafter
+    \expandafter\expandafter
+    \expandafter\expandafter
+    \expandafter{%
+    \expandafter\expandafter
+    \expandafter\@gobble
+    \expandafter\string\csname\filemod@@cmp<{#2}{#1}{#3}{#1}{#3}\endcsname}{#2}}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\iffilemod@end}
+% Checks if the argument is the \Macro\filemod@end marker.
+%    \begin{macrocode}
+\def\iffilemod@end#1{%
+  \ifx\filemod@end#1%
+    \expandafter\@firstoftwo
+  \else
+    \expandafter\@secondoftwo
+  \fi
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\filemod@end}
+% Unique end marker which would expand to nothing.
+% Could be replaced with |\@nnil|.
+%    \begin{macrocode}
+\def\filemod@end{\@gobble{filemod@end}}
+%    \end{macrocode}
+% \end{macro}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% \subsubsection{Compare file dates}
+%
+% \begin{macro}{\filemodcmp}
+% Compare two file mod dates.
+% Calls macros to check for an optional argument in an expandable way.
+%    \begin{macrocode}
+\newcommand*\filemodcmp{%
+    \filemod@opt\filemod@cmp@opt\filemod@cmp
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\filemodcmpdefault}
+%    \begin{macrocode}
+\newcommand*\filemodcmpdefault{1}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\filemod@cmp@opt}
+%    \begin{macrocode}
+\def\filemod@cmp@opt#1#2]{%
+    \filemod@cmp{#2}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\filemod@cmp}
+%    \begin{macrocode}
+\def\filemod@cmp{\filemod@@cmp>}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\filemod@@cmp}[4]{Compare sign: \> or \<}{Optional argument}{First file name}{Second file name}
+%    \begin{macrocode}
+\def\filemod@@cmp#1#2#3#4{%
+    \ifcase0%
+        \ifnum\filemodnumdate{#4}#1\filemodnumdate{#3} 1\else
+            \ifnum\filemodnumdate{#4}=\filemodnumdate{#3} %
+                \ifnum\filemodnumtime{#4}#1\filemodnumtime{#3} 1\else
+                    \ifnum\filemodnumdate{#4}=\filemodnumdate{#3} 2\fi
+                \fi
+            \fi
+        \fi
+    \space
+       \csname\ifnum#1>2 @firstofthree\else @firstoftwo\fi\expandafter\endcsname
+    \or
+       \csname\ifnum#2>2 @secondofthree\else @secondoftwo\fi\expandafter\endcsname
+    \else
+       \csname
+       \ifcase#2%
+         @gobbletwo%
+       \or
+         @firstoftwo%
+       \or
+         @secondoftwo%
+       \else
+         @thirdofthree%
+       \fi
+       \expandafter
+       \endcsname
+    \fi
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\@firstofthree}
+%    \begin{macrocode}
+\long\def\@firstofthree#1#2#3{#1}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\@secondofthree}
+%    \begin{macrocode}
+\long\def\@secondofthree#1#2#3{#2}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \iffalse
+%</expmin>
+% \fi
+%
