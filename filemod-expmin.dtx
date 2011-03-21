@@ -1,0 +1,81 @@
+% \iffalse
+%<*expmin>
+% \fi
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% The "D", ":" and "Z" characters are changed to catcode 12 because this is how they appear in the string
+% returned by `|\pdffilemoddate`.
+%    \begin{macrocode}
+\begingroup
+\@makeother\D
+\@makeother\Z
+\@makeother:
+%    \end{macrocode}
+%
+% \begin{macro}{\filemodNumdate}
+%    \begin{macrocode}
+\gdef\filemodNumdate#1{%
+    \expandafter\filemod@Numdate\pdffilemoddate{#1}D:00000000000000Z\relax
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\filemod@Numdate}
+%    \begin{macrocode}
+\gdef\filemod@Numdate D:#1#2#3#4#5#6#7#8#9\relax{%
+    #1#2#3#4#5#6#7#8%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\filemodNumtime}
+%    \begin{macrocode}
+\gdef\filemodNumtime#1{%
+    \expandafter\filemod@Numtime\pdffilemoddate{#1}D:00000000000000Z\relax
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\filemod@Numtime}
+%    \begin{macrocode}
+\gdef\filemod@Numtime D:#1#2#3#4#5#6#7#8#9\relax{%
+    \filemod@@Numtime#9\relax
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\filemod@@Numtime}
+%    \begin{macrocode}
+\gdef\filemod@@Numtime#1#2#3#4#5#6#7\relax{%
+    #1#2#3#4#5#6%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%    \begin{macrocode}
+\endgroup
+%    \end{macrocode}
+%
+% \begin{macro}{\filemodCmp}
+%    \begin{macrocode}
+\newcommand*\filemodCmp[2]{%
+    \ifcase0%
+        \ifnum\filemodNumdate{#2}>\filemodNumdate{#1} 1\else
+            \ifnum\filemodNumdate{#2}=\filemodNumdate{#1} %
+                \ifnum\filemodNumtime{#2}>\filemodNumtime{#1} 1\fi
+            \fi
+        \fi
+    \space
+       \expandafter\@firstoftwo
+    \or
+       \expandafter\@secondoftwo
+    \fi
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \iffalse
+%</expmin>
+% \fi
+%
