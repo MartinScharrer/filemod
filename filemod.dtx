@@ -24,7 +24,7 @@
 \begingroup
 %</dtx>
 %<*install>
-\input ydocstrip.tex
+\input docstrip.tex
 \keepsilent
 \askforoverwritefalse
 \generate{%
@@ -45,7 +45,7 @@
 %<package>\ProvidesPackage{filemod}[%
 %<expmin>\ProvidesPackage{filemod-expmin}[%
 %<*dtx|package|expmin>
-     2011/03/09 v1.0
+     2011/03/22 v1.0
 %</dtx|package|expmin>
 %<*dtx|package>
      Get and compare file modification times]
@@ -55,11 +55,13 @@
 %<*dtx>
 \documentclass{ydoc}
 \usepackage{filemod}[2011/03/09]
+\usepackage{multicol}
 \usepackage{csquotes}
 \MakeShortMacroArgs\`\relax
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
+\setcounter{tocdepth}{2}
 \begin{document}
   \DocInput{filemod.dtx}
   \PrintChanges
@@ -87,7 +89,7 @@
 %   Right brace   \}     Tilde         \~}
 %
 %
-% \changes{v1.0}{2011/03/09}{Converted to DTX file}
+% \changes{v1.0}{2011/03/22}{First release}
 %
 % \DoNotIndex{\newcommand,\newenvironment}
 %
@@ -105,6 +107,10 @@
 %   The functionality is provided by purely expandable macros or by faster but non-expandable ones.
 % \end{abstract}
 %
+% \begin{multicols}{2}
+%   \tableofcontents
+% \end{multicols}
+%
 % \section{Introduction}
 % This package provides several macros to read and compare the modification dates of files.
 % The same functionality is provided by two groups of macros:
@@ -117,13 +123,13 @@
 % However, this allows techniques which speed up the processing of these macros, making this macros faster than the expandable counterparts.
 % If expandability is not required these macros should be preferred.
 %
-% \section{Options and alternative Interface}
 %
-%
-%
-% \section{Macros}
+% \section{Usage}
+% The following macros are provided by this package:
 %
 % \subsection{Print File Modification Date and Time}
+% The following macros can be used to print (i.e.\ typeset) the file modifcation date and time of files in the document.
+% See also the \pkg{getfilemod} package which also does including adding fancy frames around it.
 %
 % \DescribeMacro{\filemodprint}{<\/filename>}
 % Prints the file modifications date and time by calling `|\filemodparse|\thefilemod{<\/filename>}`.
@@ -152,7 +158,11 @@
 % Default format: \enquote{\filemodprinttime{\jobname.dtx}}
 %
 %
+%
+%
 % \subsection{Get File Modification Date and Time as Number}
+% The following macros return both the file modification date and time as an integer number which is in the valid range for \TeX.
+% They can be used for numerical operations and are used internally by the comparison macros.
 %
 % \DescribeMacro{\filemodnumdate}{<\/filename>}
 % Expands to an integer of the form |YYYYMMDD| which can be used for numeric comparisons like `|\ifnum`.
@@ -176,7 +186,48 @@
 % into the macros `|\filemoddate`, `|\filemodtime` and `|\filemodtz`.
 %
 %
+%
 % \subsection{Compare File Modification Date/Time}
+% The following macros allow the comparison of the file modification date/time of two files.
+%
+% \DescribeMacro{\filemodcmp}[<num>]{<\/filename 1>}{<\/filename 2>}{<clause 1>}{<clause 2>}!\optional!{<clause 3>}
+% This macro compares the file modification date and time of the two given files and expands to the clause of the
+% newest file. An numerical optional argument can be given to determine the outcome if both files have the exact same 
+% modification date/time (or both do not exists). If `<num>` is 0, no clause will be expanded, i.e.\ the macro expands
+% to an empty text. If `<num>` is 1 (default) or 2 the macro expands to the corresponding clause.
+% However if `<num>` is 3, the macro will await a third clause and expands to it if both files modification dates are equal.
+%
+% This macro is fully expandable even when the optional argument is used. However, `<\/filename 1>` must not be equal to "[".
+%
+%
+% \DescribeMacro{\filemodCmp}{<\/filename 1>}{<\/filename 2>}{<clause 1>}{<clause 2>}
+% This is a simpler and therefore faster version of `|\filemodcmp`. It is fully expandable, does not take any optional
+% arguments and will always expand to the first clause if both file modification dates are equal (or both files do not exist).
+% The `|\filemodNumdate` and `|\filemodNumtime` macros are used in the comparison.
+% These three macros are also provided by the sub-package \pkg{filemod-expmin}.
+%
+%
+% \DescribeMacro{\Filemodcmp}[<num>]{<\/filename 1>}{<\/filename 2>}{<clause 1>}{<clause 2>}!\optional!{<clause 3>}
+% This macro provides the same functionality as `|\filemodcmp`.
+% It is not expandable but will be processed faster. The optional
+% argument is processed like normally.
+%
+% \DescribeMacro{\FilemodCmp}[<num>]{<\/filename 1>}{<\/filename 2>}
+% This macro will compare the two file modification dates like `|\Filemodcmp` and `|\filemodcmp` but does not take
+% the possible clauses as arguments, instead it stores the result into the expandable macro `|\filemodcmpresult`
+% which then takes `{<clause~1>}!\linebreak[3]!{<clause~2>}` (and also `{<clause~3>}` if `<num>` was 3) as arguments and expand to the one
+% corresponding to the newest file.
+% This set of macros gives the user the speed benefit of `|\Filemodcmp` while still be able to use the result in an expandable context.
+%
+%
+% \DescribeMacro{\filemodcmpdefault}
+% Holds the default number (i.e.\ 1) for the optional arguments of the previous mentioned macros.
+% This macro can be redefined with a number or a numeric expression valid for |\ifcase|. It should not contain any
+% trailing spaces.
+%
+%
+%
+% \subsection{Return Newest or Oldest File from a List}
 %
 % \DescribeMacro{\filemodnewest}[<num>]{<\/filename 1>}{<\/filename 2>}
 % Expands the file name of the newest given file or file `<num>` if both file modification dates are identical.
@@ -213,45 +264,13 @@
 % Same as `|\filemodOldest` just not expandable but faster.
 %
 %
-% \DescribeMacro{\filemodcmp}[<num>]{<\/filename 1>}{<\/filename 2>}{<clause 1>}{<clause 2>}!\optional!{<clause 3>}
-% This macro compares the file modification date and time of the two given files and expands to the clause of the
-% newest file. An numerical optional argument can be given to determine the outcome if both files have the exact same 
-% modification date/time (or both do not exists). If `<num>` is 0, no clause will be expanded, i.e.\ the macro expands
-% to an empty text. If `<num>` is 1 (default) or 2 the macro expands to the corresponding clause.
-% However if `<num>` is 3, the macro will await a third clause and expands to it if both files modification dates are equal.
-%
-% This macro is fully expandable even when the optional argument is used. However, `<\/filename 1>` must not be equal to "[".
-%
-%
-% \DescribeMacro{\filemodCmp}{<\/filename 1>}{<\/filename 2>}{<clause 1>}{<clause 2>}
-% This is a simpler and therefore faster version of `|\filemodcmp`. It is fully expandable, does not take any optional
-% arguments and will always expand to the first clause if both file modification dates are equal (or both files do not exist).
-% The `|\filemodNumdate` and `|\filemodNumtime` macros are used in the comparison.
-%
-%
-% \DescribeMacro{\Filemodcmp}[<num>]{<\/filename 1>}{<\/filename 2>}{<clause 1>}{<clause 2>}!\optional!{<clause 3>}
-% This macro provides the same functionality as `|\filemodcmp`.
-% It is not expandable but will be processed faster. The optional
-% argument is processed like normally.
-%
-% \DescribeMacro{\FilemodCmp}[<num>]{<\/filename 1>}{<\/filename 2>}
-% This macro will compare the two file modification dates like `|\Filemodcmp` and `|\filemodcmp` but does not take
-% the possible clauses as arguments, instead it stores the result into the expandable macro `|\filemodcmpresult`
-% which then takes `{<clause~1>}!\linebreak[3]!{<clause~2>}` (and also `{<clause~3>}` if `<num>` was 3) as arguments and expand to the one
-% corresponding to the newest file.
-% This set of macros gives the user the speed benefit of `|\Filemodcmp` while still be able to use the result in an expandable context.
-%
-%
-% \DescribeMacro{\filemodcmpdefault}
-% Holds the default number (i.e.\ 1) for the optional arguments of the previous mentioned macros.
-% This macro can be redefined with a number or a numeric expression valid for |\ifcase|. It should not contain any
-% trailing spaces.
 %
 %
 % \subsection{Parsing of the file modification date}
-% The format returned by the |\pdffilemoddate| primitive is \enquote{\texttt{D:}} followed by a number in the format \enquote{YYYYMMDDHHmmSST} which needs to be parsed before
-% it is useful. An example is \enquote{\pdffilemoddate{\jobname}} which is the file modification date of the source file of this manual.
-% Unfortunately this number is to large for TeX to be taken as an integer for numerical comparisons, so it is broken into two numbers (YYYYMMDD and HHmmSS) which are compared
+% The format returned by the |\pdffilemoddate| primitive is \enquote{\texttt{D:}} followed by a number in the format \enquote{\texttt{YYYYMMDDHHmmSST}} which needs to be parsed before
+% it is useful. The letters have the following meaning: \texttt{Y} = year, \texttt{M} = month, \texttt{D} = day, \texttt{H} = hour, \texttt{mm} = minutes, \texttt{S} = seconds, \texttt{T} or \texttt{TZ} = timezone string. The number of letters indicates the length except for the timezone which is of variable length.
+% An example is \enquote{\texttt{\pdffilemoddate{\jobname.dtx}}} which is the file modification date of the source file of this manual.
+% Unfortunately this number is to large for TeX to be taken as an integer for numerical comparisons, so it is broken into two numbers (\texttt{YYYYMMDD} and \texttt{HHmmSS}) which are compared
 % in multiple steps.
 %
 % \DescribeMacro{\filemodparse}{<macro>}{<\/filename>}
@@ -262,7 +281,6 @@
 % \end{quote}
 % i.e.\ year, month, day, hour, minutes, seconds and the timezone as signed offset
 % or `Z` (catcode 12).
-%
 %
 %
 % \DescribeMacro{\filemodnotexists}{<macro>}
@@ -452,6 +470,15 @@
 %</expmin>
 % \fi
 %
+% \iffalse
+%<*package>
+% \fi
+%    \begin{macrocode}
+\RequirePackage{filemod-expmin}
+%    \end{macrocode}
+% \iffalse
+%</package>
+% \fi
 %
 % \iffalse
 %<*exp>

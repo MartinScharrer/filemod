@@ -1,16 +1,8 @@
-% $Id$
-% See file 'filemod.dtx' for copyright and licence.
-%
 \input ydocstrip.tex
 \keepsilent
 \askforoverwritefalse
 \generate{%
-    \file{filemod.sty}        {\nopreamble\from{filemod-sty.dtx}    {package}}%
-    \file{filemod-dis.sty}    {\nopreamble\from{filemod-dis.dtx}    {parse}}%
-    \file{filemod-parse.sty}  {\nopreamble\from{filemod-parse.dtx}  {parse}}%
-    \file{filemod-exp.sty}    {\nopreamble\from{filemod-exp.dtx}    {exp}}%
-    \file{filemod-expmin.sty} {\nopreamble\from{filemod-expmin.dtx} {expmin}}%
-    \file{filemod-exe.sty}    {\nopreamble\from{filemod-exe.dtx}    {exe}}%
+    \file{filemod.sty}        {\nopreamble\from{filemod.dtx} {COPYRIGHT,package,parse,exp,exe,display,aux}}%
+    \file{filemod-expmin.sty} {\nopreamble\from{filemod.dtx} {COPYRIGHT,expmin}}%
 }
 \endbatchfile
-% vim: ft=tex
