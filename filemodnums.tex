@@ -1,0 +1,66 @@
+\documentclass{article}
+
+\usepackage{filemod}
+
+\begin{document}
+\ttfamily
+
+\def\test#1{%
+  \def\TESTSTR{#1}%
+  \edef\TEST{#1}%
+  \par\bigskip
+  \par\noindent
+  \message{^^J%
+  \meaning\TESTSTR^^J%
+  \meaning\TEST
+  ^^J}%
+  \meaning\TEST\\
+  \TEST
+}
+
+\begingroup
+%\tracingall
+
+\test{\filemodNumdate{\jobname}}
+\test{\filemodNumtime{\jobname}}
+\test{\filemodnumdate{\jobname}}
+\test{\filemodnumtime{\jobname}}
+
+\Filemodgetnum{\jobname}
+\filemoddate
+\filemodtime
+
+\ifnum\filemodNumdate{\jobname}=\filemodnumdate{\jobname}\relax
+    \typeout{SUCCESS: Numdate=numdate}%
+\else
+    \typeout{FAIL: Numdate<>numdate}%
+\fi
+\ifnum\filemodNumtime{\jobname}=\filemodnumtime{\jobname}\relax
+    \typeout{SUCCESS: Numtime=numtime}%
+\else
+    \typeout{FAIL: Numtime<>numtime}%
+\fi
+\ifnum\filemodNumdate{\jobname}=\filemoddate\relax
+    \typeout{SUCCESS: Numdate=date}%
+\else
+    \typeout{FAIL: Numdate<>date}%
+\fi
+\ifnum\filemodNumtime{\jobname}=\filemodtime\relax
+    \typeout{SUCCESS: Numtime=time}%
+\else
+    \typeout{FAIL: Numtime<>time}%
+\fi
+\ifnum\filemodnumdate{\jobname}=\filemoddate\relax
+    \typeout{SUCCESS: numdate=date}%
+\else
+    \typeout{FAIL: numdate<>date}%
+\fi
+\ifnum\filemodnumtime{\jobname}=\filemodtime\relax
+    \typeout{SUCCESS: numtime=time}%
+\else
+    \typeout{FAIL: numtime<>time}%
+\fi
+
+\endgroup
+\end{document}
+
