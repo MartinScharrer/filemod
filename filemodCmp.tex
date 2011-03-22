@@ -24,10 +24,6 @@
     \par
 }
 
-\begin{document}
-\begingroup
-\ttfamily
-
 \def\test#1#2{%
   \def\TESTSTR{#1}%
   \edef\TEST{#1}%
@@ -52,6 +48,11 @@
   \meaning\TEST\\
   \TEST
 }
+
+
+\begin{document}
+\begingroup
+\ttfamily
 
 \test{\filemodCmp{filea}{fileb}{a}{b}}{b}
 \test{\filemodCmp{fileb}{filea}{b}{a}}{b}
