@@ -2,7 +2,7 @@
 %<*exp>
 % \fi
 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \subsubsection{Parser}
 %
 % \begin{macro}{\filemodparse}[2]{Macro or tokens to process result}{file name}
@@ -73,7 +73,7 @@
 % \end{macro}
 %
 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \subsubsection{Numeric macros}
 %
 %
@@ -111,7 +111,7 @@
 %
 %
 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \subsubsection{Optional argument handler}
 %
 % \begin{macro}{\filemod@opt}[3]{Macro to read optional argument when present}{Next macro which receives default optional argument as first normal argument}{\texttt{[} or first mandatory argument}
@@ -157,8 +157,103 @@
 % \end{macro}
 %
 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \subsubsection{Compare file dates}
+%
+% \begin{macro}{\filemodcmp}
+% Compare two file mod dates.
+% Calls macros to check for an optional argument in an expandable way.
+%    \begin{macrocode}
+\newcommand*\filemodcmp{%
+    \filemod@opt\filemod@cmp@opt\filemod@cmp
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\filemodcmpdefault}
+% The default optional argument which is used if none is provided.
+%    \begin{macrocode}
+\newcommand*\filemodcmpdefault{1}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\filemod@cmp@opt}[2]{"[" wrapped in \{\}}{Content of optional argument}
+% Removes the brackets from the optional argument.
+%    \begin{macrocode}
+\def\filemod@cmp@opt#1#2]{%
+    \filemod@cmp{#2}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\filemod@cmp}
+% This saves several |\expandafter|'s in \Macro\filemod@opt.
+%    \begin{macrocode}
+\def\filemod@cmp{\filemod@@cmp>}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\filemod@@cmp}[4]{Compare sign: \texttt{>} or \texttt{<}}{Optional argument}{File name 1}{File name 2}
+% Compares the dates and times of the two files. The three cases are (0) file 1 newer than file 2, (1) file 2 newer than file 1,
+% (2) both files have the same date.
+%
+% In (2) the optional argument |#2| determines which clause is executed.
+%    \begin{macrocode}
+\def\filemod@@cmp#1#2#3#4{%
+    \ifcase0%
+        \ifnum\filemodnumdate{#4}#1\filemodnumdate{#3} 1\else
+            \ifnum\filemodnumdate{#4}=\filemodnumdate{#3} %
+                \ifnum\filemodnumtime{#4}#1\filemodnumtime{#3} 1\else
+                    \ifnum\filemodnumdate{#4}=\filemodnumdate{#3} 2\fi
+                \fi
+            \fi
+        \fi
+    \space
+       \csname\ifnum#1>2 @firstofthree\else @firstoftwo\fi\expandafter\endcsname
+    \or
+       \csname\ifnum#2>2 @secondofthree\else @secondoftwo\fi\expandafter\endcsname
+    \else
+       \csname
+       \ifcase#2%
+         @gobbletwo%
+       \or
+         @firstoftwo%
+       \or
+         @secondoftwo%
+       \else
+         @thirdofthree%
+       \fi
+       \expandafter
+       \endcsname
+    \fi
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\@firstofthree}
+% Expands to the first of the next three arguments.
+%    \begin{macrocode}
+\long\def\@firstofthree#1#2#3{#1}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\@secondofthree}
+% Expands to the second of the next three arguments.
+%    \begin{macrocode}
+\long\def\@secondofthree#1#2#3{#2}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
 % \subsubsection{Compare file mod times and return file name}
 %
 %
@@ -388,99 +483,6 @@
 % \end{macro}
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-% \subsubsection{Compare file dates}
-%
-% \begin{macro}{\filemodcmp}
-% Compare two file mod dates.
-% Calls macros to check for an optional argument in an expandable way.
-%    \begin{macrocode}
-\newcommand*\filemodcmp{%
-    \filemod@opt\filemod@cmp@opt\filemod@cmp
-}
-%    \end{macrocode}
-% \end{macro}
-%
-%
-% \begin{macro}{\filemodcmpdefault}
-% The default optional argument which is used if none is provided.
-%    \begin{macrocode}
-\newcommand*\filemodcmpdefault{1}
-%    \end{macrocode}
-% \end{macro}
-%
-%
-% \begin{macro}{\filemod@cmp@opt}[2]{"[" wrapped in \{\}}{Content of optional argument}
-% Removes the brackets from the optional argument.
-%    \begin{macrocode}
-\def\filemod@cmp@opt#1#2]{%
-    \filemod@cmp{#2}%
-}
-%    \end{macrocode}
-% \end{macro}
-%
-%
-% \begin{macro}{\filemod@cmp}
-% This saves several |\expandafters|.
-%    \begin{macrocode}
-\def\filemod@cmp{\filemod@@cmp>}
-%    \end{macrocode}
-% \end{macro}
-%
-%
-% \begin{macro}{\filemod@@cmp}[4]{Compare sign: \texttt{>} or \texttt{<}}{Optional argument}{File name 1}{File name 2}
-% Compares the dates and times of the two files. The three cases are (0) file 1 newer than file 2, (1) file 2 newer than file 1,
-% (2) both files have the same date.
-%
-% In (2) the optional argument |#2| determines which clause is executed.
-%    \begin{macrocode}
-\def\filemod@@cmp#1#2#3#4{%
-    \ifcase0%
-        \ifnum\filemodnumdate{#4}#1\filemodnumdate{#3} 1\else
-            \ifnum\filemodnumdate{#4}=\filemodnumdate{#3} %
-                \ifnum\filemodnumtime{#4}#1\filemodnumtime{#3} 1\else
-                    \ifnum\filemodnumdate{#4}=\filemodnumdate{#3} 2\fi
-                \fi
-            \fi
-        \fi
-    \space
-       \csname\ifnum#1>2 @firstofthree\else @firstoftwo\fi\expandafter\endcsname
-    \or
-       \csname\ifnum#2>2 @secondofthree\else @secondoftwo\fi\expandafter\endcsname
-    \else
-       \csname
-       \ifcase#2%
-         @gobbletwo%
-       \or
-         @firstoftwo%
-       \or
-         @secondoftwo%
-       \else
-         @thirdofthree%
-       \fi
-       \expandafter
-       \endcsname
-    \fi
-}
-%    \end{macrocode}
-% \end{macro}
-%
-%
-% \begin{macro}{\@firstofthree}
-% Expands to the first of the next three arguments.
-%    \begin{macrocode}
-\long\def\@firstofthree#1#2#3{#1}
-%    \end{macrocode}
-% \end{macro}
-%
-%
-% \begin{macro}{\@secondofthree}
-% Expands to the second of the next three arguments.
-%    \begin{macrocode}
-\long\def\@secondofthree#1#2#3{#2}
-%    \end{macrocode}
-% \end{macro}
-%
 %
 % \iffalse
 %</expmin>
