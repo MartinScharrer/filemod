@@ -3,9 +3,9 @@
 % \fi
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \subsection{Parser}
+% \subsubsection{Parser}
 %
-% \begin{macro}{\filemodparse}
+% \begin{macro}{\filemodparse}[2]{Macro or tokens to process result}{file name}
 %    \begin{macrocode}
 \newcommand*\filemodparse[2]{%
     \expandafter\filemod@parse\pdffilemoddate{#2}\relax{#1}%
@@ -14,7 +14,7 @@
 % \end{macro}
 %
 %
-% \begin{macro}{\filemod@parse}
+% \begin{macro}{\filemod@parse}[2]{Expanded file mod date}{Macro}
 %    \begin{macrocode}
 \def\filemod@parse#1\relax#2{%
     \ifx\relax#1\relax
@@ -28,6 +28,8 @@
 %    \end{macrocode}
 % \end{macro}
 %
+%
+%
 % The "D", ":" and "Z" characters are changed to catcode 12 because this is how they appear in the string
 % returned by `|\pdffilemoddate`.
 %    \begin{macrocode}
@@ -37,16 +39,17 @@
 \@makeother:
 %    \end{macrocode}
 %
-% \begin{macro}{\filemod@parse@D:}
+% \begin{macro}{\filemod@parse@}[9]{Y1}{Y2}{Y3}{Y4}{M1}{M2}{D1}{D2}{Rest}
 %    \begin{macrocode}
-\gdef\filemod@parse@D:#1#2#3#4#5#6#7#8#9\relax{%
+\gdef\filemod@parse@ D:#1#2#3#4#5#6#7#8#9\relax{%
     \filemod@parse@@{{#1#2#3#4}{#5#6}{#7#8}}#9\relax
 }
 %    \end{macrocode}
 % \end{macro}
 %
 %
-% \begin{macro}{\filemodnotexists}
+% \begin{macro}{\filemodnotexists}[1]{Macro provided to \Macro\filemodparse}
+% Macro which is used for non-existing files.
 %    \begin{macrocode}
 \gdef\filemodnotexists#1{%
     #1{0000}{00}{00}{00}{00}{00}{Z}%
@@ -54,19 +57,14 @@
 %    \end{macrocode}
 % \end{macro}
 %
-%
-% \begin{macro}{\filemodZ}
-%    \begin{macrocode}
-\expandafter\gdef\csname filemodZ\endcsname{Z}%
-\let\filemodz=Z\relax
-%    \end{macrocode}
-% \end{macro}
-%
 %    \begin{macrocode}
 \endgroup
 %    \end{macrocode}
 %
-% \begin{macro}{\filemod@parse@@}
+%
+%
+% \begin{macro}{\filemod@parse@@}[9]{\{YYYY\}\{MM\}\{DD\}}{H1}{H2}{m1}{m2}{S1}{S2}{TZ}{Macro}
+% Reads the rest of the file mod date and places the resulting arguments in front of the given macro.
 %    \begin{macrocode}
 \def\filemod@parse@@#1#2#3#4#5#6#7#8\empty#9\relax{%
     #9#1{#2#3}{#4#5}{#6#7}{#8}%
@@ -75,139 +73,53 @@
 % \end{macro}
 %
 %
-%
-% \begin{macro}{\filemodprint}
-%    \begin{macrocode}
-\newcommand*\filemodprint{\filemodparse\thefilemod}
-%    \end{macrocode}
-% \end{macro}
-%
-%
-% \begin{macro}{\filemodprintdate}
-%    \begin{macrocode}
-\newcommand*\filemodprintdate{\filemodparse\the@filemoddate}
-%    \end{macrocode}
-% \end{macro}
-%
-%
-% \begin{macro}{\filemodprinttime}
-%    \begin{macrocode}
-\newcommand*\filemodprinttime{\filemodparse\the@filemodtime}
-%    \end{macrocode}
-% \end{macro}
-%
-%
-% \begin{macro}{\thefilemod}
-%    \begin{macrocode}
-\newcommand*\thefilemod[7]{%
-    \thefilemoddate{#1}{#2}{#3}%
-    \filemodsep
-    \thefilemodtime{#4}{#5}{#6}{#7}%
-}
-%    \end{macrocode}
-% \end{macro}
-%
-%    \begin{macrocode}
-\let\filemodsep\space
-%    \end{macrocode}
-%
-% \begin{macro}{\thefilemoddate}
-%    \begin{macrocode}
-\newcommand*\thefilemoddate[3]{%
-    #1/#2/#3%
-}
-%    \end{macrocode}
-% \end{macro}
-%
-%
-% \begin{macro}{\thefilemodtime}
-%    \begin{macrocode}
-\newcommand*\thefilemodtime[4]{%
-    #1:#2:#3~#4%
-}
-%    \end{macrocode}
-% \end{macro}
-%
-%
-% \begin{macro}{\the@filemoddate}
-%    \begin{macrocode}
-\def\the@filemoddate#1#2#3#4#5#6#7{%
-    \thefilemoddate{#1}{#2}{#3}%
-}
-%    \end{macrocode}
-% \end{macro}
-%
-%
-% \begin{macro}{\the@filemodtime}
-%    \begin{macrocode}
-\def\the@filemodtime#1#2#3{%
-    \thefilemodtime
-}
-%    \end{macrocode}
-% \end{macro}
-%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \subsubsection{Numeric macros}
 %
 %
 % \begin{macro}{\filemodnumdate}
+% Simply calls the parse macro.
 %    \begin{macrocode}
 \newcommand*\filemodnumdate{\filemodparse\filemod@numdate}
 %    \end{macrocode}
 % \end{macro}
 %
 %
-% \begin{macro}{\filemod@numdate}
+% \begin{macro}{\filemod@numdate}[7]{YYYY}{MM}{DD}{HH}{mm}{SS}{TZ}
 %    \begin{macrocode}
+% Gobbles everything except "YYYYMMDD" which is returned as number without the braces.
 \def\filemod@numdate#1#2#3#4#5#6#7{#1#2#3}
 %    \end{macrocode}
 % \end{macro}
 %
 %
+%
 % \begin{macro}{\filemodnumtime}
+% Simply calls the parse macro.
 %    \begin{macrocode}
 \newcommand*\filemodnumtime{\filemodparse\filemod@numtime}
 %    \end{macrocode}
 % \end{macro}
 %
 %
-% \begin{macro}{\filemod@numtime}
+% \begin{macro}{\filemod@numtime}[7]{YYYY}{MM}{DD}{HH}{mm}{SS}{TZ}
+% Gobbles everything except "HHmmSS" which is returned as number without the braces.
 %    \begin{macrocode}
 \def\filemod@numtime#1#2#3#4#5#6#7{#4#5#6}
 %    \end{macrocode}
 % \end{macro}
 %
 %
-% \begin{macro}{\filemod@newest}
-%    \begin{macrocode}
-\def\filemod@newest#1#2#3{%
-    \filemod@@cmp>{#1}{#2}{#3}{#2}{#3}%
-}
-%    \end{macrocode}
-% \end{macro}
 %
-%
-% \begin{macro}{\filemod@oldest}
-%    \begin{macrocode}
-\def\filemod@oldest#1#2#3{%
-    \filemod@@cmp<{#1}{#2}{#3}{#2}{#3}%
-}
-%    \end{macrocode}
-% \end{macro}
-%
-%
-% \begin{macro}{\filemodnewest}
-%    \begin{macrocode}
-\newcommand*\filemodnewest{%
-    \filemod@opt\filemod@newest@opt\filemod@newest
-}
-%    \end{macrocode}
-% \end{macro}
-%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \subsubsection{Optional argument handler}
 %
 % \begin{macro}{\filemod@opt}[3]{Macro to read optional argument when present}{Next macro which receives default optional argument as first normal argument}{\texttt{[} or first mandatory argument}
 % This macro checks if an optional argument is present. Here |#1| and |#2| are handlers and |#3| is the first balanced text which followed the macro, i.e.\ either "[" or the first
-% mandatory argument. There are three possible cases:
+% mandatory argument.
+% The |\ifx| compares "[" and the first token of |#3|. There are three possible cases:
 % \begin{enumerate}
-%   \item The |\ifx| compares "[" and the first token of |#3|. If they do not match everything until and including |\else| is skipped.
+%   \item If they do not match everything until and including |\else| is skipped.
 % Then |\remove@to@nnil@exec| is expanded which removes the following |\@nnil|. This leaves |\empty| and the rest of the \emph{false} clause.
 % The |\fi| is removed using |\expandafter| and the trailing |{#3}| is read by |#2| as normal argument.
 %   \item If |#3| is exactly "[" the |\ifx[#3| part is removed by \TeX. The |\remove@to@nnil@exec| removes the |\@nnil| and the |\remove@to@nnil| because there was nothing before |\@nnil|.
@@ -217,7 +129,6 @@
 %   the first token of |#3|. The |\remove@to@nnil@exec| gobbles the rest of |#3| but reads and reinserts |\remove@to@nnil| which gobbles everything to the next |\@nnil|
 %   after |\else| and therefore jumps to the \emph{false} clause. This clause is executed like normal, i.e.\ |#2| is called with the default optional argument and |{#3}| as second argument.
 % \end{enumerate}
-%
 %    \begin{macrocode}
 \def\filemod@opt#1#2#3{%
     \expandafter
@@ -234,7 +145,7 @@
 % \end{macro}
 %
 %
-% \begin{macro}{\remove@to@nnil@exec}
+% \begin{macro}{\remove@to@nnil@exec}[2]{Tokens to remove}{Following token}
 % Removes everything to |\@nnil| and executes the next token except if |#1| was empty.
 %    \begin{macrocode}
 \def\remove@to@nnil@exec#1\@nnil#2{%
@@ -246,7 +157,23 @@
 % \end{macro}
 %
 %
-% \begin{macro}{\filemod@newest@opt}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \subsubsection{Compare file mod times and return file name}
+%
+%
+% \begin{macro}{\filemodnewest}
+% First a macro is called to handle an optional argument in an expandable way.
+%    \begin{macrocode}
+\newcommand*\filemodnewest{%
+    \filemod@opt\filemod@newest@opt\filemod@newest
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\filemod@newest@opt}[2]{The "[" wrapped in \{\}}{Content of optional argument}
+% Removes braces around the optional argument.
 %    \begin{macrocode}
 \def\filemod@newest@opt#1#2]{%
     \filemod@newest{#2}%
@@ -255,7 +182,20 @@
 % \end{macro}
 %
 %
+% \begin{macro}{\filemod@newest}[3]{optional argument}{file name 1}{file name 2}
+% Uses the normal (internal) compare macro with the file names as the result clauses.
+%    \begin{macrocode}
+\def\filemod@newest#1#2#3{%
+    \filemod@@cmp>{#1}{#2}{#3}{#2}{#3}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+%
+%
 % \begin{macro}{\filemodoldest}
+% First a macro is called to handle an optional argument in an expandable way.
 %    \begin{macrocode}
 \newcommand*\filemodoldest{%
     \filemod@opt\filemod@oldest@opt\filemod@oldest
@@ -264,7 +204,8 @@
 % \end{macro}
 %
 %
-% \begin{macro}{\filemod@oldest@opt}
+% \begin{macro}{\filemod@oldest@opt}[2]{The "[" wrapped in \{\}}{Content of optional argument}
+% Removes braces around the optional argument.
 %    \begin{macrocode}
 \def\filemod@oldest@opt#1#2]{%
     \filemod@oldest{#2}%
@@ -273,10 +214,21 @@
 % \end{macro}
 %
 %
+% \begin{macro}{\filemod@oldest}[3]{optional argument}{file name 1}{file name 2}
+% Uses the normal (internal) compare macro with the file names as the result clauses.
+%    \begin{macrocode}
+\def\filemod@oldest#1#2#3{%
+    \filemod@@cmp<{#1}{#2}{#3}{#2}{#3}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \subsubsection{Newest and oldest file of a list of files}
 %
-% \begin{macro}{\filemodNewest}
+% \begin{macro}{\filemodNewest}[1]{Tokens between macros and opening brace}
 % Checks for an optional argument and substitutes the default if it is missing.
 %    \begin{macrocode}
 \newcommand*\filemodNewest{}
@@ -299,7 +251,7 @@
 % \end{macro}
 %
 %
-% \begin{macro}{\filemodOldest}
+% \begin{macro}{\filemodOldest}[1]{Tokens between macros and opening brace}
 % Like \Macro\filemodNewest but returns the oldest file in the given list.
 % It and its sub-macros are simply copies of minor changes of the |Newest| counterparts.
 % This is done for the benefit of expansion speed versus memory usage.
@@ -325,7 +277,7 @@
 % \end{macro}
 %
 %
-% \begin{macro}{\@filemodNewest}
+% \begin{macro}{\@filemodNewest}[2]{Optional argument}{File name list}
 % Removes "[]" from first and braces from the second argument (the file name list).
 %    \begin{macrocode}
 \def\@filemodNewest[#1]#2{%
@@ -334,7 +286,7 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\@filemodOldest}
+% \begin{macro}{\@filemodOldest}[2]{Optional argument}{File name list}
 % Like \Macro\@filemodNewest.
 %    \begin{macrocode}
 \def\@filemodOldest[#1]#2{%
@@ -344,7 +296,7 @@
 % \end{macro}
 %
 %
-% \begin{macro}{\@@filemodNewest}
+% \begin{macro}{\@@filemodNewest}[2]{Optional argument}{First file name}
 % Reads the optional argument as |#1| and the first file name as |#2|.
 % It then reverses the order for the processing loop.
 %    \begin{macrocode}
@@ -355,7 +307,7 @@
 % \end{macro}
 %
 %
-% \begin{macro}{\@@filemodOldest}
+% \begin{macro}{\@@filemodOldest}[2]{Optional argument}{First file name}
 %    \begin{macrocode}
 \def\@@filemodOldest#1#2{%
     \filemod@Oldest{#2}{#1}%
@@ -390,7 +342,7 @@
 % \end{macro}
 %
 %
-% \begin{macro}{\filemod@Oldest}
+% \begin{macro}{\filemod@Oldest}[3]{First file name}{Optional argument}{Second file name}
 % Like \Macro\filemode@Newest but with different compare operator.
 %    \begin{macrocode}
 \def\filemod@Oldest#1#2#3{%
@@ -413,7 +365,7 @@
 % \end{macro}
 %
 %
-% \begin{macro}{\iffilemod@end}
+% \begin{macro}{\iffilemod@end}[1]{Next file name or end marker}
 % Checks if the argument is the \Macro\filemod@end marker.
 %    \begin{macrocode}
 \def\iffilemod@end#1{%
@@ -451,13 +403,15 @@
 %
 %
 % \begin{macro}{\filemodcmpdefault}
+% The default optional argument which is used if none is provided.
 %    \begin{macrocode}
 \newcommand*\filemodcmpdefault{1}
 %    \end{macrocode}
 % \end{macro}
 %
 %
-% \begin{macro}{\filemod@cmp@opt}
+% \begin{macro}{\filemod@cmp@opt}[2]{"[" wrapped in \{\}}{Content of optional argument}
+% Removes the brackets from the optional argument.
 %    \begin{macrocode}
 \def\filemod@cmp@opt#1#2]{%
     \filemod@cmp{#2}%
@@ -467,13 +421,18 @@
 %
 %
 % \begin{macro}{\filemod@cmp}
+% This saves several |\expandafters|.
 %    \begin{macrocode}
 \def\filemod@cmp{\filemod@@cmp>}
 %    \end{macrocode}
 % \end{macro}
 %
 %
-% \begin{macro}{\filemod@@cmp}[4]{Compare sign: \> or \<}{Optional argument}{First file name}{Second file name}
+% \begin{macro}{\filemod@@cmp}[4]{Compare sign: \texttt{>} or \texttt{<}}{Optional argument}{File name 1}{File name 2}
+% Compares the dates and times of the two files. The three cases are (0) file 1 newer than file 2, (1) file 2 newer than file 1,
+% (2) both files have the same date.
+%
+% In (2) the optional argument |#2| determines which clause is executed.
 %    \begin{macrocode}
 \def\filemod@@cmp#1#2#3#4{%
     \ifcase0%
@@ -508,6 +467,7 @@
 %
 %
 % \begin{macro}{\@firstofthree}
+% Expands to the first of the next three arguments.
 %    \begin{macrocode}
 \long\def\@firstofthree#1#2#3{#1}
 %    \end{macrocode}
@@ -515,6 +475,7 @@
 %
 %
 % \begin{macro}{\@secondofthree}
+% Expands to the second of the next three arguments.
 %    \begin{macrocode}
 \long\def\@secondofthree#1#2#3{#2}
 %    \end{macrocode}
