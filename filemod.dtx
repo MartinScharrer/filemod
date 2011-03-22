@@ -132,29 +132,30 @@
 % See also the \pkg{getfilemod} package which also does including adding fancy frames around it.
 %
 % \DescribeMacro{\filemodprint}{<\/filename>}
-% Prints the file modifications date and time by calling `|\filemodparse|\thefilemod{<\/filename>}`.
+% Prints the file modifications date and time using `|\filemodparse` and `|\thefilemod`.
 %
 %
 % \DescribeMacro{\filemodprintdate}{<\/filename>}
-% Prints the file modifications date by calling `|\filemodparse|\thefilemoddate{<\/filename>}`.
+% Prints the file modifications date using `|\filemodparse` and `|\thefilemoddate`.
 %
 %
 % \DescribeMacro{\filemodprinttime}{<\/filename>}
-% Prints the file modifications time by calling `|\filemodparse|\thefilemodtime{<\/filename>}`.
+% Prints the file modifications time using `|\filemodparse` and `|\thefilemodtime`.
 %
 %
 % \DescribeMacro{\thefilemod}
 % Reads the date and time as seven arguments and typesets it. This macro can be redefined to a custom format.\\
-% Default format: \enquote{\filemodprint{\jobname.dtx}}
+% By default it simple uses `|\thefilemoddate` and `|\thefilemodtime` separated by `|\filemodsep` (a space by default):
+% \enquote{\filemodprint{\jobname.dtx}}
 %
 %
 % \DescribeMacro{\thefilemoddate}
-% Reads the date and time as seven arguments and typesets only the date. This macro can be redefined to a custom format.\\
+% Receives the date as three arguments YYYY, MM and DD and typesets it. This macro can be redefined to a custom format.\\
 % Default format: \enquote{\filemodprintdate{\jobname.dtx}}
 %
 %
 % \DescribeMacro{\thefilemodtime}
-% Reads the date and time as seven arguments and typesets only the time. This macro can be redefined to a custom format.\\
+% Receives the time and timezone as four arguments HH, mm, SS and TZ and typesets it. This macro can be redefined to a custom format.\\
 % Default format: \enquote{\filemodprinttime{\jobname.dtx}}
 %
 %
