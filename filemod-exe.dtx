@@ -1,0 +1,195 @@
+%
+% \iffalse
+%<*exe>
+% \fi
+%
+% \subsection{Non-Expandable Macros}
+% The following macros are not expandable but contain assignments which must be
+% executed. This makes them faster because information can be buffered.
+% Some of them can return expandable results.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \subsubsection{Get Numeric Representation of File Modification Date}
+%
+% \begin{macro}{\Filemodgetnum}
+%    \begin{macrocode}
+\newcommand*\Filemodgetnum{\filemodparse\Filemod@getnum}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\Filemod@getnum}
+%    \begin{macrocode}
+\def\Filemod@getnum#1#2#3#4#5#6#7{%
+    \def\filemoddate{#1#2#3}%
+    \def\filemodtime{#4#5#6}%
+    \def\filemodtz{#7}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \subsubsection{File Modification Date Comparison}
+%
+%
+% \begin{macro}{\Filemodnewest}
+%    \begin{macrocode}
+\newcommand*\Filemodnewest[2]{\FilemodNewest{{#1}{#2}}}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\Filemodoldest}
+%    \begin{macrocode}
+\newcommand*\Filemodoldest[2]{\FilemodOldest{{#1}{#2}}}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\FilemodOldest}
+%    \begin{macrocode}
+\newcommand*\FilemodOldest[2][1]{%
+    \def\filemode@tie{#1}%
+    \def\filemod@gl{<}%
+    \Filemod@Newest#2\filemod@end
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\FilemodNewest}
+%    \begin{macrocode}
+\newcommand*\FilemodNewest[2][1]{%
+    \def\filemode@tie{#1}%
+    \def\filemod@gl{>}%
+    \Filemod@Newest#2\filemod@end
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\Filemod@Newest}
+%    \begin{macrocode}
+\def\Filemod@Newest#1{%
+    \def\filemodcmpfile{#1}%
+    \Filemodgetnum{#1}%
+    \let\filemodcmpdate\filemoddate
+    \let\filemodcmptime\filemodtime
+    \Filemod@@Newest
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\Filemod@@Newest}
+%    \begin{macrocode}
+\def\Filemod@@Newest#1{%
+  \iffilemod@end{#1}{}{%
+    \Filemodgetnum{#1}%
+    \ifcase0%
+        \ifnum\filemoddate\filemod@gl\filemodcmpdate\space1\else
+            \ifnum\filemoddate=\filemodcmpdate\space
+                \ifnum\filemodtime\filemod@gl\filemodcmptime\space1\else
+                    \ifnum\filemoddate=\filemodcmpdate\space
+                        \ifnum\filemode@tie=1\else 1\fi
+                    \fi
+                \fi
+            \fi
+        \fi
+    \else
+        \def\filemodcmpfile{#1}%
+        \let\filemodcmpdate\filemoddate
+        \let\filemodcmptime\filemodtime
+    \fi
+    \Filemod@@Newest
+  }%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\filemod@gl}
+%    \begin{macrocode}
+\def\filemod@gl{>}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\Filemodcmp}
+%    \begin{macrocode}
+\newcommand\Filemodcmp[1][1]{%
+    \def\filemod@next{\filemodcmpresult}%
+    \Filemod@cmp{#1}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\FilemodCmp}
+%    \begin{macrocode}
+\newcommand\FilemodCmp[1][1]{%
+    \let\filemod@next\empty
+    \Filemod@cmp{#1}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\Filemod@cmp}
+%    \begin{macrocode}
+\def\Filemod@cmp#1#2#3{%
+    \Filemodgetnum{#2}%
+    \let\filemoddatea\filemoddate
+    \let\filemodtimea\filemodtime
+    \Filemodgetnum{#3}%
+    \ifcase0%
+        \ifnum\filemoddate>\filemoddatea\space1\else
+            \ifnum\filemoddate=\filemoddatea\space
+                \ifnum\filemodtime>\filemodtimea\space1\else
+                    \ifnum\filemoddate=\filemoddatea\space2\fi
+                \fi
+            \fi
+        \fi
+    \relax
+       \def\filemodcmpfile{#1}%
+       \ifnum#1>2\relax
+          \def\filemodcmpresult##1##2##3{##1}%
+       \else
+          \let\filemodcmpresult\@firstoftwo
+       \fi
+    \or
+       \def\filemodcmpfile{#2}%
+       \ifnum#1>2\relax
+          \def\filemodcmpresult##1##2##3{##2}%
+       \else
+          \let\filemodcmpresult\@secondoftwo
+       \fi
+    \else
+       \ifcase#1\relax
+         \let\filemodcmpfile\empty
+         \let\filemodcmpresult\@gobbletwo
+       \or
+         \def\filemodcmpfile{#1}%
+         \let\filemodcmpresult\@firstoftwo
+       \or
+         \def\filemodcmpfile{#2}%
+         \let\filemodcmpresult\@secondoftwo
+       \else
+         \let\filemodcmpfile\empty
+         \let\filemodcmpresult\@thirdofthree
+       \fi
+    \fi
+    \filemod@next
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \iffalse
+%</exe>
+% \fi
+%
+% \Finale
+\endinput
