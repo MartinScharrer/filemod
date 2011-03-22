@@ -621,12 +621,12 @@
         \ifnum\filemodnumdate{#4}#1\filemodnumdate{#3} 1\else
             \ifnum\filemodnumdate{#4}=\filemodnumdate{#3} %
                 \ifnum\filemodnumtime{#4}#1\filemodnumtime{#3} 1\else
-                    \ifnum\filemodnumdate{#4}=\filemodnumdate{#3} 2\fi
+                    \ifnum\filemodnumtime{#4}=\filemodnumtime{#3} 2\fi
                 \fi
             \fi
         \fi
     \space
-       \csname @firstoft\ifnum#1>2 hree\else wo\fi\expandafter\endcsname
+       \csname @firstoft\ifnum#2>2 hree\else wo\fi\expandafter\endcsname
     \or
        \csname @secondoft\ifnum#2>2 hree\else wo\fi\expandafter\endcsname
     \else
@@ -972,7 +972,7 @@
         \ifnum\filemoddate>\filemoddatea\space1\else
             \ifnum\filemoddate=\filemoddatea\space
                 \ifnum\filemodtime>\filemodtimea\space1\else
-                    \ifnum\filemoddate=\filemoddatea\space2\fi
+                    \ifnum\filemodtime=\filemodtimea\space2\fi
                 \fi
             \fi
         \fi
@@ -1096,7 +1096,7 @@
         \ifnum\filemoddate\filemod@gl\filemodcmpdate\space1\else
             \ifnum\filemoddate=\filemodcmpdate\space
                 \ifnum\filemodtime\filemod@gl\filemodcmptime\space1\else
-                    \ifnum\filemoddate=\filemodcmpdate\space
+                    \ifnum\filemodtime=\filemodcmptime\space
                         \ifnum\filemode@tie=1\else 1\fi
                     \fi
                 \fi
