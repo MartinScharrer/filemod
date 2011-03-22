@@ -2,48 +2,83 @@
 
 \usepackage{filemod}
 
-\begin{document}
-\begingroup
-\ttfamily
+\newcounter{tests}
+\newcounter{fail}
+\newcounter{success}
 
-\def\test#1{%
+\AtEndDocument{%
+    \par\bigskip\noindent
+    Results:\\
+    \tabular{ll}%
+    Tests:     & \arabic{tests}   \\
+    Succeeded: & \arabic{success}    \\
+    Failed:    & \arabic{fail} \\
+    \endtabular
+    \let~\space
+    \message{^^J%
+    Results:^^J%
+    Tests:~~~~~\arabic{tests}   ^^J%
+    Succeeded:~\arabic{success}    ^^J%
+    Failed:~~~~\arabic{fail} ^^J%
+    }%
+    \par
+}
+
+\def\test#1#2{%
   \def\TESTSTR{#1}%
   \edef\TEST{#1}%
+  \edef\TARGET{#2}%
+  \stepcounter{tests}%
   \par\bigskip
   \par\noindent
   \message{^^J%
-  \meaning\TESTSTR^^J%
-  \meaning\TEST
+    \meaning\TESTSTR^^J%
+    \meaning\TEST^^J%
+    \ifx\TEST\TARGET
+        SUCCESS!%
+    \else
+        FAIL: \meaning\TARGET
+    \fi
   ^^J}%
+  \ifx\TEST\TARGET
+    \stepcounter{success}%
+  \else
+    \stepcounter{fail}%
+  \fi
   \meaning\TEST\\
   \TEST
 }
 
-\test{\filemodCmp{filea}{fileb}{A}{B}}
+\begin{document}
+\begingroup
+\ttfamily
 
-\test{\filemodcmp{filea}{fileb}{A}{B}{C}}
-\test{\filemodcmp[-1]{filea}{fileb}{A}{B}{C}}
-\test{\filemodcmp[0]{filea}{fileb}{A}{B}{C}}
-\test{\filemodcmp[1]{filea}{fileb}{A}{B}{C}}
-\test{\filemodcmp[2]{filea}{fileb}{A}{B}{C}}
-\test{\filemodcmp[3]{filea}{fileb}{A}{B}{C}}
-\test{\filemodcmp[4]{filea}{fileb}{A}{B}{C}}
 
-\test{\filemodcmp{fileb}{filea}{A}{B}{C}}
-\test{\filemodcmp[-1]{fileb}{filea}{A}{B}{C}}
-\test{\filemodcmp[0]{fileb}{filea}{A}{B}{C}}
-\test{\filemodcmp[1]{fileb}{filea}{A}{B}{C}}
-\test{\filemodcmp[2]{fileb}{filea}{A}{B}{C}}
-\test{\filemodcmp[3]{fileb}{filea}{A}{B}{C}}
-\test{\filemodcmp[4]{fileb}{filea}{A}{B}{C}}
+\test{\filemodCmp{filea}{fileb}{A}{B}}{B}
 
-\test{\filemodcmp{filea}{filea}{A}{B}{C}}
-\test{\filemodcmp[-1]{filea}{filea}{A}{B}{C}}
-\test{\filemodcmp[0]{filea}{filea}{A}{B}{C}}
-\test{\filemodcmp[1]{filea}{filea}{A}{B}{C}}
-\test{\filemodcmp[2]{filea}{filea}{A}{B}{C}}
-\test{\filemodcmp[3]{filea}{filea}{A}{B}{C}}
-\test{\filemodcmp[4]{filea}{filea}{A}{B}{C}}
+\test{\filemodcmp{filea}{fileb}{A}{B}{C}}{B{C}}
+\test{\filemodcmp[-1]{filea}{fileb}{A}{B}{C}}{B{C}}
+\test{\filemodcmp[0]{filea}{fileb}{A}{B}{C}}{B{C}}
+\test{\filemodcmp[1]{filea}{fileb}{A}{B}{C}}{B{C}}
+\test{\filemodcmp[2]{filea}{fileb}{A}{B}{C}}{B{C}}
+\test{\filemodcmp[3]{filea}{fileb}{A}{B}{C}}{B}
+\test{\filemodcmp[4]{filea}{fileb}{A}{B}{C}}{B}
+
+\test{\filemodcmp{fileb}{filea}{B}{A}{C}}{B{C}}
+\test{\filemodcmp[-1]{fileb}{filea}{B}{A}{C}}{B{C}}
+\test{\filemodcmp[0]{fileb}{filea}{B}{A}{C}}{B{C}}
+\test{\filemodcmp[1]{fileb}{filea}{B}{A}{C}}{B{C}}
+\test{\filemodcmp[2]{fileb}{filea}{B}{A}{C}}{B{C}}
+\test{\filemodcmp[3]{fileb}{filea}{B}{A}{C}}{B}
+\test{\filemodcmp[4]{fileb}{filea}{B}{A}{C}}{B}
+
+\test{\filemodcmp{filea}{filea}{A}{B}{C}}{A{C}}
+\test{\filemodcmp[-1]{filea}{filea}{A}{B}{C}}{C}
+\test{\filemodcmp[0]{filea}{filea}{A}{B}{C}}{{C}}
+\test{\filemodcmp[1]{filea}{filea}{A}{B}{C}}{A{C}}
+\test{\filemodcmp[2]{filea}{filea}{A}{B}{C}}{B{C}}
+\test{\filemodcmp[3]{filea}{filea}{A}{B}{C}}{C}
+\test{\filemodcmp[4]{filea}{filea}{A}{B}{C}}{C}
 
 \endgroup
 \end{document}
