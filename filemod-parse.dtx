@@ -1,0 +1,78 @@
+% \iffalse
+%<*parse>
+% \fi
+% \subsection{Parser}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% \begin{macro}{\filemodparse}[2]{Macro or tokens to process result}{file name}
+%    \begin{macrocode}
+\newcommand*\filemodparse[2]{%
+    \expandafter\filemod@parse\pdffilemoddate{#2}\relax{#1}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\filemod@parse}[2]{Expanded file mod date}{Macro}
+%    \begin{macrocode}
+\def\filemod@parse#1\relax#2{%
+    \ifx\relax#1\relax
+        \expandafter\@firstoftwo
+    \else
+        \expandafter\@secondoftwo
+    \fi
+    {\filemodnotexists{#2}}%
+    {\filemod@parse@#1\empty{#2}\relax}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+%
+% The "D", ":" and "Z" characters are changed to catcode 12 because this is how they appear in the string
+% returned by `|\pdffilemoddate`.
+%    \begin{macrocode}
+\begingroup
+\@makeother\D
+\@makeother\Z
+\@makeother:
+%    \end{macrocode}
+%
+% \begin{macro}{\filemod@parse@}[9]{Y1}{Y2}{Y3}{Y4}{M1}{M2}{D1}{D2}{Rest}
+%    \begin{macrocode}
+\gdef\filemod@parse@ D:#1#2#3#4#5#6#7#8#9\relax{%
+    \filemod@parse@@{{#1#2#3#4}{#5#6}{#7#8}}#9\relax
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\filemodnotexists}[1]{Macro provided to \Macro\filemodparse}
+% Macro which is used for non-existing files.
+%    \begin{macrocode}
+\gdef\filemodnotexists#1{%
+    #1{0000}{00}{00}{00}{00}{00}{Z}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%    \begin{macrocode}
+\endgroup
+%    \end{macrocode}
+%
+%
+%
+% \begin{macro}{\filemod@parse@@}[9]{\{YYYY\}\{MM\}\{DD\}}{H1}{H2}{m1}{m2}{S1}{S2}{TZ}{Macro}
+% Reads the rest of the file mod date and places the resulting arguments in front of the given macro.
+%    \begin{macrocode}
+\def\filemod@parse@@#1#2#3#4#5#6#7#8\empty#9\relax{%
+    #9#1{#2#3}{#4#5}{#6#7}{#8}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \iffalse
+%</parse>
+% \fi
+%

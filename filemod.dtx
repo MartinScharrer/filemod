@@ -20,22 +20,23 @@
 % \fi
 %
 % \iffalse
-%<*driver>
-\ProvidesFile{filemod.dtx}
-%</driver>
-%<package>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
-%<package>\ProvidesPackage{filemod}
-%<*package>
-    [2011/03/09 v1.0 Get and compare file modification times]
-%</package>
+%<*dtx>
+\ProvidesFile{filemod.dtx}[%
+%</dtx>
+%<package>\ProvidesPackage{filemod}[%
+%<expmin>\ProvidesPackage{filemod-expmin}[%
+%<*dtx|package|expmin>
+     2011/03/09 v1.0
+%</dtx|package|expmin>
+%<*dtx|package>
+     Get and compare file modification times]
+%</dtx|package>
+%<*expmin>     Get and compare file modification times (expandable; minimal)]
 %
 %<*driver>
 \documentclass{ydoc}
 \usepackage{filemod}[2011/03/09]
-\usepackage{filemod-exp}[2011/03/09]
-\usepackage{filemod-expmin}[2011/03/09]
-\usepackage{filemod-aux}[2011/03/09]
-\usepackage{filemod-dis}[2011/03/09]
+\usepackage{csquote}
 \def\enq#1{`#1'}
 \MakeShortMacroArgs\`\relax
 \EnableCrossrefs
@@ -43,6 +44,7 @@
 \RecordChanges
 \begin{document}
   \DocInput{filemod.dtx}
+  \DocInput{filemod-sty.dtx}
   \DocInput{filemod-aux.dtx}
   \DocInput{filemod-dis.dtx}
   \DocInput{filemod-exp.dtx}
@@ -124,17 +126,17 @@
 %
 % \DescribeMacro{\thefilemod}
 % Reads the date and time as seven arguments and typesets it. This macro can be redefined to a custom format.\\
-% Default format: \enq{\filemodprint{\jobname.dtx}}
+% Default format: \enquote{\filemodprint{\jobname.dtx}}
 %
 %
 % \DescribeMacro{\thefilemoddate}
 % Reads the date and time as seven arguments and typesets only the date. This macro can be redefined to a custom format.\\
-% Default format: \enq{\filemodprintdate{\jobname.dtx}}
+% Default format: \enquote{\filemodprintdate{\jobname.dtx}}
 %
 %
 % \DescribeMacro{\thefilemodtime}
 % Reads the date and time as seven arguments and typesets only the time. This macro can be redefined to a custom format.\\
-% Default format: \enq{\filemodprinttime{\jobname.dtx}}
+% Default format: \enquote{\filemodprinttime{\jobname.dtx}}
 %
 %
 % \subsection{Get File Modification Date and Time as Number}
@@ -234,8 +236,8 @@
 %
 %
 % \subsection{Parsing of the file modification date}
-% The format returned by the |\pdffilemoddate| primitive is \enq{\texttt{D:}} followed by a number in the format \enq{YYYYMMDDHHmmSST} which needs to be parsed before
-% it is useful. An example is \enq{\pdffilemoddate{\jobname}} which is the file modification date of the source file of this manual.
+% The format returned by the |\pdffilemoddate| primitive is \enquote{\texttt{D:}} followed by a number in the format \enquote{YYYYMMDDHHmmSST} which needs to be parsed before
+% it is useful. An example is \enquote{\pdffilemoddate{\jobname}} which is the file modification date of the source file of this manual.
 % Unfortunately this number is to large for TeX to be taken as an integer for numerical comparisons, so it is broken into two numbers (YYYYMMDD and HHmmSS) which are compared
 % in multiple steps.
 %

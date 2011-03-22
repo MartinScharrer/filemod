@@ -6,7 +6,7 @@ RMDIR=rm -rf
 PDFLATEX=pdflatex -interaction=batchmode
 LATEXMK=latexmk -pdf -silent
 
-PACKEDFILES=filemod.cls filemod.sty filemod.cfg filemod.tex
+PACKEDFILES=filemod.sty
 DOCFILES=filemod.pdf
 SRCFILES=filemod.dtx filemod.ins README Makefile
 
