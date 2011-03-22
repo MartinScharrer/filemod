@@ -1,0 +1,30 @@
+%
+% \subsection{Auxiliary Macros}
+% 
+% The "Z" characters are changed to catcode 12 because this is how they appear in the string
+% returned by `|\pdffilemoddate`.
+%    \begin{macrocode}
+\begingroup
+\@makeother\D
+%    \end{macrocode}
+%
+%
+% \begin{macro}{\filemodZ}
+% Holds "Z" with catcode 12 (\emph{other}) like it is returned by `|\pdffilemoddate`.
+% Requires use of |\csname| because "Z" isn't a letter at the moment.
+%    \begin{macrocode}
+\expandafter\gdef\csname filemodZ\endcsname{Z}%
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\filemodz}
+%    \begin{macrocode}
+\let\filemodz=Z\relax
+%    \end{macrocode}
+% \end{macro}
+%
+%
+%    \begin{macrocode}
+\endgroup
+%    \end{macrocode}
+%

@@ -32,6 +32,10 @@
 %<*driver>
 \documentclass{ydoc}
 \usepackage{filemod}[2011/03/09]
+\usepackage{filemod-exp}[2011/03/09]
+\usepackage{filemod-expmin}[2011/03/09]
+\usepackage{filemod-aux}[2011/03/09]
+\usepackage{filemod-dis}[2011/03/09]
 \def\enq#1{`#1'}
 \MakeShortMacroArgs\`\relax
 \EnableCrossrefs
@@ -39,6 +43,8 @@
 \RecordChanges
 \begin{document}
   \DocInput{filemod.dtx}
+  \DocInput{filemod-aux.dtx}
+  \DocInput{filemod-dis.dtx}
   \DocInput{filemod-exp.dtx}
   \DocInput{filemod-expmin.dtx}
   \PrintChanges
