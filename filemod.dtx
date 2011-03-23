@@ -981,7 +981,7 @@
 %    \end{macrocode}
 % First file is newer:
 %    \begin{macrocode}
-       \def\filemodcmpfile{#1}%
+       \def\filemodresultfile{#1}%
        \ifnum#1>2\relax
           \def\filemodcmpresult##1##2##3{##1}%
        \else
@@ -991,7 +991,7 @@
 %    \end{macrocode}
 % Second file is newer:
 %    \begin{macrocode}
-       \def\filemodcmpfile{#2}%
+       \def\filemodresultfile{#2}%
        \ifnum#1>2\relax
           \def\filemodcmpresult##1##2##3{##2}%
        \else
@@ -1002,16 +1002,16 @@
 % File mod dates are equal. The optional argument determines which clause is used.
 %    \begin{macrocode}
        \ifcase#1\relax
-         \let\filemodcmpfile\empty
+         \let\filemodresultfile\empty
          \let\filemodcmpresult\@gobbletwo
        \or
-         \def\filemodcmpfile{#1}%
+         \def\filemodresultfile{#1}%
          \let\filemodcmpresult\@firstoftwo
        \or
-         \def\filemodcmpfile{#2}%
+         \def\filemodresultfile{#2}%
          \let\filemodcmpresult\@secondoftwo
        \else
-         \let\filemodcmpfile\empty
+         \let\filemodresultfile\empty
          \let\filemodcmpresult\@thirdofthree
        \fi
     \fi
@@ -1029,7 +1029,7 @@
 % \begin{macro}{\Filemodnewest}
 % Simply uses \Macro\FilemodNewest.
 %    \begin{macrocode}
-\newcommand*\Filemodnewest[2]{\FilemodNewest{{#1}{#2}}}
+\newcommand*\Filemodnewest[3][1]{\FilemodNewest[{#1}]{{#2}{#3}}}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1037,7 +1037,7 @@
 % \begin{macro}{\Filemodoldest}
 % Simply uses \Macro\FilemodOldest.
 %    \begin{macrocode}
-\newcommand*\Filemodoldest[2]{\FilemodOldest{{#1}{#2}}}
+\newcommand*\Filemodoldest[3][1]{\FilemodOldest[{#1}]{{#2}{#3}}}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1075,10 +1075,10 @@
 % Then the recursive part is called.
 %    \begin{macrocode}
 \def\Filemod@est#1{%
-    \def\filemodcmpfile{#1}%
+    \def\filemodresultfile{#1}%
     \Filemodgetnum{#1}%
-    \let\filemodcmpdate\filemoddate
-    \let\filemodcmptime\filemodtime
+    \let\filemodresultdate\filemoddate
+    \let\filemodresulttime\filemodtime
     \Filemod@@est
 }
 %    \end{macrocode}
@@ -1087,26 +1087,26 @@
 %
 % \begin{macro}{\Filemod@@est}[1]{Next file name or end marker}
 % Recursive part. Simple aborts (expands to nothing) if |#1| is the end-marker.
-% Then the resulting file is in \Macro\filemodcmpfile and the date and time are in
-% \Macro\filemodcmpdate and \Macro\filemodcmptime, respectively.
+% Then the resulting file is in \Macro\filemodresultfile and the date and time are in
+% \Macro\filemodresultdate and \Macro\filemodresulttime, respectively.
 %    \begin{macrocode}
 \def\Filemod@@est#1{%
   \iffilemod@end{#1}{}{%
     \Filemodgetnum{#1}%
     \ifcase0%
-        \ifnum\filemoddate\filemod@gl\filemodcmpdate\space1\else
-            \ifnum\filemoddate=\filemodcmpdate\space
-                \ifnum\filemodtime\filemod@gl\filemodcmptime\space1\else
-                    \ifnum\filemodtime=\filemodcmptime\space
+        \ifnum\filemoddate\filemod@gl\filemodresultdate\space1\else
+            \ifnum\filemoddate=\filemodresultdate\space
+                \ifnum\filemodtime\filemod@gl\filemodresulttime\space1\else
+                    \ifnum\filemodtime=\filemodresulttime\space
                         \ifnum\filemode@tie=1\else 1\fi
                     \fi
                 \fi
             \fi
         \fi
     \else
-        \def\filemodcmpfile{#1}%
-        \let\filemodcmpdate\filemoddate
-        \let\filemodcmptime\filemodtime
+        \def\filemodresultfile{#1}%
+        \let\filemodresultdate\filemoddate
+        \let\filemodresulttime\filemodtime
     \fi
     \Filemod@@est
   }%
