@@ -19,7 +19,7 @@ NORMAL = \033[00m
 OK = ${GREEN}OK${NORMAL}
 FAIL = ${RED}FAILURE${NORMAL}
 
-all: unpack doc
+all: doc
 
 package: unpack
 class: unpack
@@ -27,7 +27,8 @@ class: unpack
 ${PACKEDFILES}: filemod.dtx filemod.ins
 	yes | pdflatex filemod.ins
 
-unpack: ${PACKEDFILES}
+unpack:
+	${PDFLATEX} filemod.dtx
 
 # 'doc' and 'filemod.pdf' call itself until everything is stable
 doc: filemod.pdf
