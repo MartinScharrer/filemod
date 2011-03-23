@@ -229,7 +229,7 @@
 % This set of macros gives the user the speed benefit of `|\Filemodcmp` while still be able to use the result in an expandable context.
 %
 %
-% \DescribeMacro{\filemodcmpdefault}
+% \DescribeMacro{\filemodoptdefault}
 % Holds the default number (i.e.\ 1) for the optional arguments of the previous mentioned macros.
 % This macro can be redefined with a number or a numeric expression valid for |\ifcase|. It should not contain any
 % trailing spaces.
@@ -578,7 +578,7 @@
       \expandafter#1%
     \else\@nnil\empty
       \expandafter#2%
-      \expandafter\filemodcmpdefault
+      \expandafter\filemodoptdefault
     \fi
     {#3}%
 }
@@ -613,10 +613,10 @@
 % \end{macro}
 %
 %
-% \begin{macro}{\filemodcmpdefault}
+% \begin{macro}{\filemodoptdefault}
 % The default optional argument which is used if none is provided.
 %    \begin{macrocode}
-\newcommand*\filemodcmpdefault{1}
+\newcommand*\filemodoptdefault{1}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -780,7 +780,7 @@
   \fi
     oftwo%
   \endcsname
-    {[\filemodcmpdefault]}%
+    {[\filemodoptdefault]}%
     {#1}%
 }
 %    \end{macrocode}
@@ -806,7 +806,7 @@
   \fi
     oftwo%
   \endcsname
-    {[\filemodcmpdefault]}%
+    {[\filemodoptdefault]}%
     {#1}%
 }
 %    \end{macrocode}
