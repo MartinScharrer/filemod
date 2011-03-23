@@ -128,8 +128,10 @@
 % The following macros are provided by this package:
 %
 % \subsection{Print File Modification Date and Time}
-% The following macros can be used to print (i.e.\ typeset) the file modifcation date and time of files in the document.
-% See also the \pkg{getfilemod} package which also does including adding fancy frames around it.
+% The following macros can be used to print (i.e.\ typeset) the file modification date and time of files in the document.
+% The \Macro\formatdate and \Macro\formattime macros of the \pkg{datetime}\footnote{CTAN: \url{http://www.ctan.org/pkg/datetime}} can be used in addition to format the dates and times
+% in a language specific format.
+% See also the \pkg{getfiledate}\footnote{CTAN: \url{http://www.ctan.org/pkg/getfiledate}} package which also prints file modification dates including adding fancy frames around it.
 %
 % \DescribeMacro{\filemodprint}{<\/filename>}
 % Prints the file modifications date and time using `|\filemodparse` and `|\thefilemod`.
@@ -153,10 +155,16 @@
 % Receives the date as three arguments YYYY, MM and DD and typesets it. This macro can be redefined to a custom format.\\
 % Default format: \enquote{\filemodprintdate{\jobname.dtx}}
 %
+% It could be redefined to use the `|\formatdate` macro of the \pkg{datetime}:\\
+% |\renewcommand*{\thefilemoddate}[3]{\formatdate{#3}{#2}{#1}}|
+%
 %
 % \DescribeMacro{\thefilemodtime}
 % Receives the time and timezone as four arguments HH, mm, SS and TZ and typesets it. This macro can be redefined to a custom format.\\
 % Default format: \enquote{\filemodprinttime{\jobname.dtx}}
+%
+% It could be redefined to use the `|\formattime` macro of the \pkg{datetime}:\\
+% |\renewcommand*{\thefilemodtime}[4]{\formattime{#1}{#2}{#3}}|
 %
 %
 %
@@ -229,40 +237,59 @@
 %
 %
 % \subsection{Return Newest or Oldest File from a List}
+% The following macros return the newest or oldest file.
+% Note that the optional arguments of the following macros should only be either 1 (default) or 2.
 %
 % \DescribeMacro{\filemodnewest}[<num>]{<\/filename 1>}{<\/filename 2>}
-% Expands the file name of the newest given file or file `<num>` if both file modification dates are identical.
+% Expands the filename of the newest given file or filename `<num>` if both file modification dates are identical.
+% The catcode of the filenames is not changed.
 %
 % \DescribeMacro{\filemodoldest}[<num>]{<\/filename 1>}{<\/filename 2>}
-% Expands the file name of the oldest given file or file `<num>` if both file modification dates are identical.
+% Expands the filename of the oldest given file or filename `<num>` if both file modification dates are identical.
+% The catcode of the filenames is not changed.
 %
 %
 % \DescribeMacro{\filemodNewest}[<num>]{{<\/filename 1>}{<\/filename 2>}'...'{<\/filename n>}}
-% Expands the file name of the newest given file.
+% Expands the filename of the newest given file.
+% The filename will have catcode 12 except in the case when only one filename was given which is returned unchanged.
 % The files are compared in pairs of two in the given order (i.e.\ first 1 and 2 and the result with 3 etc.)
-% The optional argument `<num>` can be used to indicate which file name should be used if both file modification dates are identical.
+% The optional argument `<num>` can be used to indicate which filename should be used if both file modification dates are identical.
 %
 %
 % \DescribeMacro{\filemodOldest}[<num>]{{<\/filename 1>}{<\/filename 2>}'...'{<\/filename n>}}
-% Expands the file name of the oldest given file.
+% Expands the filename of the oldest given file.
+% The filename will have catcode 12 except in the case when only one filename was given which is returned unchanged.
 % The files are compared in pairs of two in the given order (i.e.\ first 1 and 2 and the result with 3 etc.)
-% The optional argument `<num>` can be used to indicate which file name should be used if both file modification dates are identical.
+% The optional argument `<num>` can be used to indicate which filename should be used if both file modification dates are identical.
+%
 %
 %
 % \DescribeMacro{\Filemodnewest}[<num>]{<\/filename 1>}{<\/filename 2>}
 % Same as `|\filemodnewest` just not expandable but faster.
+% Stores the newer of the two file names in `|\filemodresultfile`. Its file modification date and time is stored
+% in `|\filemodresultdate` and `|\filemodresulttime`.
+% The catcode of the filenames is not changed.
 %
 %
 % \DescribeMacro{\Filemodoldest}[<num>]{<\/filename 1>}{<\/filename 2>}
 % Same as `|\filemodoldest` just not expandable but faster.
+% Stores the older of the two file names in `|\filemodresultfile`. Its file modification date and time is stored
+% in `|\filemodresultdate` and `|\filemodresulttime`.
+% The catcode of the filenames is not changed.
 %
 %
 % \DescribeMacro{\FilemodNewest}[<num>]{{<\/filename 1>}{<\/filename 2>}'...'{<\/filename n>}}
 % Same as `|\filemodNewest` just not expandable but faster.
+% Stores the newest of the given file names in `|\filemodresultfile`. Its file modification date and time is stored
+% in `|\filemodresultdate` and `|\filemodresulttime`.
+% The catcode of the filenames is not changed.
 %
 %
 % \DescribeMacro{\FilemodOldest}[<num>]{{<\/filename 1>}{<\/filename 2>}'...'{<\/filename n>}}
 % Same as `|\filemodOldest` just not expandable but faster.
+% Stores the oldest of the given file names in `|\filemodresultfile`. Its file modification date and time is stored
+% in `|\filemodresultdate` and `|\filemodresulttime`.
+% The catcode of the filenames is not changed.
 %
 %
 %
@@ -309,6 +336,7 @@
 %
 % \StopEventually{}
 %
+% \clearpage
 % \section{Implementation}
 %
 % \iffalse
@@ -316,7 +344,7 @@
 % \fi
 % \subsection{Parser}
 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % \begin{macro}{\filemodparse}[2]{Macro or tokens to process result}{file name}
 %    \begin{macrocode}
@@ -485,7 +513,7 @@
 %<*exp>
 % \fi
 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \subsection{Expandable Macros}
 %
 % \subsubsection{Numeric macros}
@@ -524,7 +552,7 @@
 %
 %
 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \subsubsection{Optional argument handler}
 %
 % \begin{macro}{\filemod@opt}[3]{Macro to read optional argument when present}{Next macro which receives default optional argument as first normal argument}{\texttt{[} or first mandatory argument}
@@ -570,7 +598,7 @@
 % \end{macro}
 %
 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % \subsubsection{Compare file dates}
 %
@@ -665,7 +693,7 @@
 % \end{macro}
 %
 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % \subsubsection{Compare file mod times and return file name}
 %
@@ -733,7 +761,7 @@
 %
 %
 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \subsubsection{Newest and oldest file of a list of files}
 %
 % \begin{macro}{\filemodNewest}[1]{Tokens between macros and opening brace}
@@ -786,7 +814,7 @@
 %
 %
 % \begin{macro}{\@filemodNewest}[2]{Optional argument}{File name list}
-% Removes "[]" from first and braces from the second argument (the file name list).
+% Removes "[]" from first and braces from the second argument (the filename list).
 %    \begin{macrocode}
 \def\@filemodNewest[#1]#2{%
     \@@filemodNewest{#1}#2\filemod@end
@@ -805,7 +833,7 @@
 %
 %
 % \begin{macro}{\@@filemodNewest}[2]{Optional argument}{First file name}
-% Reads the optional argument as |#1| and the first file name as |#2|.
+% Reads the optional argument as |#1| and the first filename as |#2|.
 % It then reverses the order for the processing loop.
 %    \begin{macrocode}
 \def\@@filemodNewest#1#2{%
@@ -825,7 +853,7 @@
 %
 %
 % \begin{macro}{\filemod@Newest}[3]{First file name}{Optional argument}{Second file name}
-% Checks if the second file name is the end marker. In this case the first file name is returned (i.e.\ expanded to).
+% Checks if the second filename is the end marker. In this case the first filename is returned (i.e.\ expanded to).
 % Otherwise expands the compare macro. This is done in one step using |\csname| which is then turned into a string
 % which |\| is gobbled. Because of the required expandability the |\escapechar| can't be changed.
 % Finally it calls itself recursively with the expanded result.
@@ -873,7 +901,7 @@
 % \end{macro}
 %
 %
-% \begin{macro}{\iffilemod@end}[1]{Next file name or end marker}
+% \begin{macro}{\iffilemod@end}[1]{Next filename or end marker}
 % Checks if the argument is the \Macro\filemod@end marker.
 %    \begin{macrocode}
 \def\iffilemod@end#1{%
@@ -895,7 +923,7 @@
 %    \end{macrocode}
 % \end{macro}
 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % \iffalse
 %</exp>
@@ -911,7 +939,7 @@
 % executed. This makes them faster because information can be buffered.
 % Some of them can return expandable results.
 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \subsubsection{Get Numeric Representation of File Modification Date}
 %
 % \begin{macro}{\Filemodgetnum}
@@ -932,7 +960,7 @@
 % \end{macro}
 %
 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \subsubsection{Compare Two File Modification Dates}
 %
 % \begin{macro}{\Filemodcmp}[1]{Optional argument (default: "1")}
@@ -1023,7 +1051,7 @@
 % Defined above.
 % \end{macro}
 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \subsubsection{Compare file mod times and return file name}
 %
 % \begin{macro}{\Filemodnewest}
@@ -1085,7 +1113,7 @@
 % \end{macro}
 %
 %
-% \begin{macro}{\Filemod@@est}[1]{Next file name or end marker}
+% \begin{macro}{\Filemod@@est}[1]{Next filename or end marker}
 % Recursive part. Simple aborts (expands to nothing) if |#1| is the end-marker.
 % Then the resulting file is in \Macro\filemodresultfile and the date and time are in
 % \Macro\filemodresultdate and \Macro\filemodresulttime, respectively.
