@@ -15,6 +15,6 @@ Examples:
     % Prints file modification date and time of main file
     \filemodprint{\jobname}
 
-    % Include newest of a set of images:
-    \includegraphics{\filemodNewest{{file1.png}{file2.png}{file3.png}}}
+    % Include newest of a set of files:
+    \input{\filemodNewest{{file1}{file2}{file3}}}
 
