@@ -230,15 +230,16 @@
 %
 %
 % \DescribeMacro{\filemodoptdefault}
-% Holds the default number (i.e.\ 1) for the optional arguments of the previous mentioned macros.
+% Holds the default number (i.e.\ 1) for the optional argument of the previous and following macros.
 % This macro can be redefined with a number or a numeric expression valid for |\ifcase|. It should not contain any
-% trailing spaces.
+% trailing spaces. Note that some commands only accept 1 or 2 as valid optional argument.
 %
 %
 %
 % \subsection{Return Newest or Oldest File from a List}
 % The following macros return the newest or oldest file.
-% Note that the optional arguments of the following macros should only be either 1 (default) or 2.
+% Note that the optional arguments of the following macros should only be either 1 or 2.
+% If no optional argument is provided the value of `|\filemodoptdefault` is used.
 %
 % \DescribeMacro{\filemodnewest}[<num>]{<\/filename 1>}{<\/filename 2>}
 % Expands the filename of the newest given file or filename `<num>` if both file modification dates are identical.
@@ -1057,7 +1058,7 @@
 % \begin{macro}{\Filemodnewest}
 % Simply uses \Macro\FilemodNewest.
 %    \begin{macrocode}
-\newcommand*\Filemodnewest[3][1]{\FilemodNewest[{#1}]{{#2}{#3}}}
+\newcommand*\Filemodnewest[3][\filemodoptdefault]{\FilemodNewest[{#1}]{{#2}{#3}}}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1065,7 +1066,7 @@
 % \begin{macro}{\Filemodoldest}
 % Simply uses \Macro\FilemodOldest.
 %    \begin{macrocode}
-\newcommand*\Filemodoldest[3][1]{\FilemodOldest[{#1}]{{#2}{#3}}}
+\newcommand*\Filemodoldest[3][\filemodoptdefault]{\FilemodOldest[{#1}]{{#2}{#3}}}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1075,7 +1076,7 @@
 % Uses \Macro\Filemod@est with a different compare sign.
 % Stores the optional argument for later processing. This avoids the need to pass it around as an argument.
 %    \begin{macrocode}
-\newcommand*\FilemodNewest[2][1]{%
+\newcommand*\FilemodNewest[2][\filemodoptdefault]{%
     \def\filemode@tie{#1}%
     \def\filemod@gl{>}%
     \Filemod@est#2\filemod@end
@@ -1088,7 +1089,7 @@
 % Uses \Macro\Filemod@est with a different compare sign.
 % Stores the optional argument for later processing. This avoids the need to pass it around as an argument.
 %    \begin{macrocode}
-\newcommand*\FilemodOldest[2][1]{%
+\newcommand*\FilemodOldest[2][\filemodoptdefault]{%
     \def\filemode@tie{#1}%
     \def\filemod@gl{<}%
     \Filemod@est#2\filemod@end
