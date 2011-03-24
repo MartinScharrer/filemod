@@ -370,12 +370,15 @@
 %<tex>   \input pdftexcmds.sty
     \filemod@directfalse
     \ifx\pdf@filemoddate\@undefined
-        \PackageError{filemod}{Required command \string\pdffilemoddate\space is not defined!}
+        \edef\filemod@help
         {The required command \string\pdffilemoddate\space is not defined.
-         This means that the used LaTeX compiler does not support it.
-         Please make sure that pdfLaTeX 1.30.0 or newer or LuaLaTeX is used.
-         XeLaTeX does not support reading file modification dates.
+         This means that the used\space\space LaTeX compiler does not support it.
+         Please make sure that pdfLaTeX 1.30.0 or\space\space\space newer or LuaLaTeX is used.
+         XeLaTeX does not support reading file modification\space\space dates.
         }%
+%<latex>  \PackageError{filemod}{Required command \string\pdffilemoddate\space is not defined!}{\filemod@help}
+%<tex>    \errhelp\expandafter{\filemod@help}
+%<tex>    \errmessage{filemod package: Required command \string\pdffilemoddate\space is not defined!}
     \fi
 \fi
 \fi
