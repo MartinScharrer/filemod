@@ -1,0 +1,92 @@
+
+\input filemod-expmin
+
+\def\test#1#2{%
+  \def\TESTSTR{#1}%
+  \edef\TEST{#1}%
+  \edef\TARGET{#2}%
+  \par\bigskip
+  \par\noindent
+  \message{^^J%
+    \meaning\TESTSTR^^J%
+    \meaning\TEST^^J%
+    \ifx\TEST\TARGET
+        SUCCESS!%
+    \else
+        FAIL: \meaning\TARGET
+    \fi
+  ^^J}%
+  \par
+  \meaning\TEST\par
+  \TEST
+}
+
+
+\begingroup
+%
+\test{\filemodCmp{filea}{fileb}{a}{b}}{b}
+\test{\filemodCmp{fileb}{filea}{b}{a}}{b}
+\test{\filemodCmp{filea}{notthere}{a}{not}}{a}
+\test{\filemodCmp{notthere}{filea}{not}{a}}{a}
+\test{\filemodCmp{nottherea}{notthereb}{nota}{notb}}{nota}
+\test{\filemodCmp{notthereb}{nottherea}{notb}{nota}}{notb}
+%
+\test{\filemodCmp{filea.tex}{fileb.tex}{a}{b}}{b}
+\test{\filemodCmp{fileb.tex}{filea.tex}{b}{a}}{b}
+\test{\filemodCmp{filea.tex}{notthere.tex}{a}{not}}{a}
+\test{\filemodCmp{notthere.tex}{filea.tex}{not}{a}}{a}
+\test{\filemodCmp{nottherea.tex}{notthereb.tex}{nota}{notb}}{nota}
+\test{\filemodCmp{notthereb.tex}{nottherea.tex}{notb}{nota}}{notb}
+%
+\test{\filemodCmp{filea.tex}{fileb}{a}{b}}{b}
+\test{\filemodCmp{fileb.tex}{filea}{b}{a}}{b}
+\test{\filemodCmp{filea.tex}{notthere}{a}{not}}{a}
+\test{\filemodCmp{notthere.tex}{filea}{not}{a}}{a}
+\test{\filemodCmp{nottherea.tex}{notthereb}{nota}{notb}}{nota}
+\test{\filemodCmp{notthereb.tex}{nottherea}{notb}{nota}}{notb}
+%
+\test{\filemodCmp{filea}{fileb.tex}{a}{b}}{b}
+\test{\filemodCmp{fileb}{filea.tex}{b}{a}}{b}
+\test{\filemodCmp{filea}{notthere.tex}{a}{not}}{a}
+\test{\filemodCmp{notthere}{filea.tex}{not}{a}}{a}
+\test{\filemodCmp{nottherea}{notthereb.tex}{nota}{notb}}{nota}
+\test{\filemodCmp{notthereb}{nottherea.tex}{notb}{nota}}{notb}
+%
+\test{\filemodCmp{filea.txt}{fileb.tex}{a}{b}}{b}
+\test{\filemodCmp{fileb.txt}{filea.tex}{b}{a}}{b}
+\test{\filemodCmp{filea.txt}{notthere.tex}{a}{not}}{a}
+\test{\filemodCmp{notthere.txt}{filea.tex}{not}{a}}{a}
+\test{\filemodCmp{nottherea.txt}{notthereb.tex}{nota}{notb}}{nota}
+\test{\filemodCmp{notthereb.txt}{nottherea.tex}{notb}{nota}}{notb}
+%
+\test{\filemodCmp{filea.tex}{fileb.txt}{a}{b}}{b}
+\test{\filemodCmp{fileb.tex}{filea.txt}{b}{a}}{b}
+\test{\filemodCmp{filea.tex}{notthere.txt}{a}{not}}{a}
+\test{\filemodCmp{notthere.tex}{filea.txt}{not}{a}}{a}
+\test{\filemodCmp{nottherea.tex}{notthereb.txt}{nota}{notb}}{nota}
+\test{\filemodCmp{notthereb.tex}{nottherea.txt}{notb}{nota}}{notb}
+%
+\test{\filemodCmp{filea.txt}{fileb.txt}{a}{b}}{b}
+\test{\filemodCmp{fileb.txt}{filea.txt}{b}{a}}{b}
+\test{\filemodCmp{filea.txt}{notthere.txt}{a}{not}}{a}
+\test{\filemodCmp{notthere.txt}{filea.txt}{not}{a}}{a}
+\test{\filemodCmp{nottherea.txt}{notthereb.txt}{nota}{notb}}{nota}
+\test{\filemodCmp{notthereb.txt}{nottherea.txt}{notb}{nota}}{notb}
+%
+\test{\filemodCmp{filea.txt}{fileb}{a}{b}}{b}
+\test{\filemodCmp{fileb.txt}{filea}{b}{a}}{b}
+\test{\filemodCmp{filea.txt}{notthere}{a}{not}}{a}
+\test{\filemodCmp{notthere.txt}{filea}{not}{a}}{a}
+\test{\filemodCmp{nottherea.txt}{notthereb}{nota}{notb}}{nota}
+\test{\filemodCmp{notthereb.txt}{nottherea}{notb}{nota}}{notb}
+%
+\test{\filemodCmp{filea}{fileb.txt}{a}{b}}{b}
+\test{\filemodCmp{fileb}{filea.txt}{b}{a}}{b}
+\test{\filemodCmp{filea}{notthere.txt}{a}{not}}{a}
+\test{\filemodCmp{notthere}{filea.txt}{not}{a}}{a}
+\test{\filemodCmp{nottherea}{notthereb.txt}{nota}{notb}}{nota}
+\test{\filemodCmp{notthereb}{nottherea.txt}{notb}{nota}}{notb}
+%
+\endgroup
+%
+\bye
