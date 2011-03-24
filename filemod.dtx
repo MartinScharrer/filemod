@@ -45,7 +45,7 @@
 %<package>\ProvidesPackage{filemod}[%
 %<expmin>\ProvidesPackage{filemod-expmin}[%
 %<*dtx|package|expmin>
-     2011/03/23 v1.0
+     2011/03/24 v1.1
 %</dtx|package|expmin>
 %<*dtx|package>
      Get and compare file modification times]
@@ -54,7 +54,7 @@
 %
 %<*dtx>
 \documentclass{ydoc}
-\usepackage{filemod}[2011/03/23]
+\usepackage{filemod}[2011/03/24]
 \usepackage{multicol}
 \usepackage{csquotes}
 \MakeShortMacroArgs\`\relax
@@ -70,7 +70,7 @@
 %</dtx>
 % \fi
 %
-% \CheckSum{566}
+% \CheckSum{626}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -90,6 +90,7 @@
 %
 %
 % \changes{v1.0}{2011/03/23}{First release}
+% \changes{v1.1}{2011/03/24}{Added LuaLaTeX support}
 %
 % \DoNotIndex{\newcommand,\newenvironment}
 %
@@ -103,8 +104,9 @@
 %   These files can be |.tex| files, images or other files as long as they can be found by the \LaTeX\ compiler.
 %   It uses the |\pdffilemoddate| primitive of pdf\LaTeX\ to receive the file modification date as PDF
 %   date string, parses it and returns the value to the user.
-%   This package will also work for DVI output with recent versions of the \LaTeX\ compiler which uses pdf\LaTeX\ in DVI mode.
 %   The functionality is provided by purely expandable macros or by faster but non-expandable ones.
+%   This package will also work for DVI output with recent versions of the \LaTeX\ compiler which uses pdf\LaTeX\ in DVI mode.
+%   Support for Lua\LaTeX{} is provided with help of the \pkg{pdftexcmds} package.
 % \end{abstract}
 %
 % \begin{multicols}{2}
@@ -115,10 +117,9 @@
 % This package provides several macros to read and compare the modification dates of files.
 % The same functionality is provided by two groups of macros:
 % The macros of the first group all start with a lower case letter and are fully expandable.
-% This means they can be used in places where a string must be provided, like in `|\input` or `|\includegraphics`.
+% This means they can be used in places where a string must be provided, like in `|\input`.
 % Because assignments are not expandable some of these macros, like the ones for comparisons, need to reread and re-parse the
 % file modification dates if they are required in more than one place inside the macro.
-%
 % The macros of the second group all start with a upper case letter and are not expandable because assignments are used internally.
 % However, this allows techniques which speed up the processing of these macros, making this macros faster than the expandable counterparts.
 % If expandability is not required these macros should be preferred.
