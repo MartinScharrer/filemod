@@ -25,3 +25,34 @@ Examples:
     \FilemodNewest{{file1}{file2}{file3}}
     \includegraphics{\filemodresultfile}
 
+
+REQUIREMENTS:
+=============
+pdflatex v1.30.0 or later is required.
+Alternative LuaTeX can be used together with the `pdftexcmds` package.
+
+
+INSTALLATION:
+=============
+Compile the DTX file (with included INS file) through pdflatex:
+
+    pdflatex filemod.dtx
+    pdflatex filemod.dtx
+    pdflatex filemod.dtx
+
+Copy the files to the following directories which must be created beforehand.
+Example for a Unix/Linux OS, change accordantly for MS Windows and Mac, e.g.
+copy it using a graphics interface.
+
+    cp filemod*.sty ${TEXMF}/tex/latex/filemod/
+    cp filemod*.tex ${TEXMF}/tex/generic/filemod/
+
+OPTIONAL:
+The documentation can be installed by:
+    cp filemod.pdf README  ${TEXMF}/doc/latex/filemod/
+
+The source can be installed by:
+    cp filemod.dtx  ${TEXMF}/source/latex/filemod/
+
+The TEXMF is /usr/local/texlive/2010/texmf-dist, ${HOME}/texmf or similar.
+
