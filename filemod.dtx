@@ -341,6 +341,36 @@
 % \section{Implementation}
 %
 % \iffalse
+%<*package|expmin>
+% \fi
+%
+% Check if the \Macro\pdffilemoddate command is available. If not (e.g.\ with LuaLaTeX) the \pkg{pdftexcmds} is loaded
+% to provide the \Macro\pdf@filemoddate replacement. However for XeLaTeX this will fail and an error is raised.
+%    \begin{macrocode}
+\ifx\filemod@directtrue\@undefined
+\expandafter\newif\csname iffilemod@direct\endcsname
+\filemod@directtrue
+\ifx\pdffilemoddate\@undefined
+    \RequirePackage{pdftexcmds}
+    \filemod@directfalse
+    \ifx\pdf@filemoddate\@undefined
+        \PackageError{filemod}{Required command \string\pdffilemoddate\space is not defined!\MessageBreak
+                               (XeTeX is not supported)}
+        {The required command \string\pdffilemoddate\space is not defined.
+         This means that the used LaTeX compiler does not support it.
+         Please make sure that pdfLaTeX 1.30.0 or newer or LuaLaTeX is used.
+         XeLaTeX does not support reading file modification dates.
+        }%
+    \fi
+\fi
+\fi
+%    \end{macrocode}
+%
+% \iffalse
+%</package|expmin>
+% \fi
+%
+% \iffalse
 %<*parse>
 % \fi
 % \subsection{Parser}
@@ -349,9 +379,16 @@
 %
 % \begin{macro}{\filemodparse}[2]{Macro or tokens to process result}{file name}
 %    \begin{macrocode}
+\iffilemod@direct
 \newcommand*\filemodparse[2]{%
     \expandafter\filemod@parse\pdffilemoddate{#2}\relax{#1}%
 }
+\else
+\newcommand*\filemodparse[2]{%
+    \expandafter\expandafter
+    \expandafter\filemod@parse\pdf@filemoddate{#2}\relax{#1}%
+}
+\fi
 %    \end{macrocode}
 % \end{macro}
 %
@@ -436,9 +473,16 @@
 %
 % \begin{macro}{\filemodNumdate}
 %    \begin{macrocode}
+\iffilemod@direct
 \gdef\filemodNumdate#1{%
     \expandafter\filemod@Numdate\pdffilemoddate{#1}D:00000000000000Z\relax
 }
+\else
+\gdef\filemodNumdate#1{%
+    \expandafter\expandafter
+    \expandafter\filemod@Numdate\pdf@filemoddate{#1}D:00000000000000Z\relax
+}
+\fi
 %    \end{macrocode}
 % \end{macro}
 %
@@ -452,9 +496,16 @@
 %
 % \begin{macro}{\filemodNumtime}
 %    \begin{macrocode}
+\iffilemod@direct
 \gdef\filemodNumtime#1{%
     \expandafter\filemod@Numtime\pdffilemoddate{#1}D:00000000000000Z\relax
 }
+\else
+\gdef\filemodNumtime#1{%
+    \expandafter\expandafter
+    \expandafter\filemod@Numtime\pdf@filemoddate{#1}D:00000000000000Z\relax
+}
+\fi
 %    \end{macrocode}
 % \end{macro}
 %
