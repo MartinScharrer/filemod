@@ -100,13 +100,12 @@
 % \maketitle
 %
 % \begin{abstract}
-%   This package provides macros to read and compare the modification dates of files.
-%   These files can be |.tex| files, images or other files as long as they can be found by the \LaTeX\ compiler.
-%   It uses the |\pdffilemoddate| primitive of pdf\LaTeX\ to receive the file modification date as PDF
-%   date string, parses it and returns the value to the user.
-%   The functionality is provided by purely expandable macros or by faster but non-expandable ones.
-%   This package will also work for DVI output with recent versions of the \LaTeX\ compiler which uses pdf\LaTeX\ in DVI mode.
-%   Support for Lua\LaTeX{} is provided with help of the \pkg{pdftexcmds} package.
+%   This package provides macros to read and compare the modification dates of files.  These files can be |.tex| files,
+%   images or other files as long as they can be found by the \LaTeX\ compiler.  It uses the |\pdffilemoddate| primitive
+%   of pdf\LaTeX\ to receive the file modification date as PDF date string, parses it and returns the value to the user.
+%   The functionality is provided by purely expandable macros or by faster but non-expandable ones.  This package will
+%   also work for DVI output with recent versions of the \LaTeX\ compiler which uses pdf\LaTeX\ in DVI mode.  Support
+%   for Lua\LaTeX{} is provided with help of the \pkg{pdftexcmds} package.
 % \end{abstract}
 %
 % \begin{multicols}{2}
@@ -114,25 +113,25 @@
 % \end{multicols}
 %
 % \section{Introduction}
-% This package provides several macros to read and compare the modification dates of files.
-% The same functionality is provided by two groups of macros:
-% The macros of the first group all start with a lower case letter and are fully expandable.
-% This means they can be used in places where a string must be provided, like in `|\input`.
-% Because assignments are not expandable some of these macros, like the ones for comparisons, need to reread and re-parse the
-% file modification dates if they are required in more than one place inside the macro.
-% The macros of the second group all start with a upper case letter and are not expandable because assignments are used internally.
-% However, this allows techniques which speed up the processing of these macros, making this macros faster than the expandable counterparts.
-% If expandability is not required these macros should be preferred.
+% This package provides several macros to read and compare the modification dates of files.  The same functionality is
+% provided by two groups of macros: The macros of the first group all start with a lower case letter and are fully
+% expandable.  This means they can be used in places where a string must be provided, like in `|\input`.  Because
+% assignments are not expandable some of these macros, like the ones for comparisons, need to reread and re-parse the
+% file modification dates if they are required in more than one place inside the macro.  The macros of the second group
+% all start with a upper case letter and are not expandable because assignments are used internally.  However, this
+% allows techniques which speed up the processing of these macros, making this macros faster than the expandable
+% counterparts.  If expandability is not required these macros should be preferred.
 %
 %
 % \section{Usage}
 % The following macros are provided by this package:
 %
 % \subsection{Print File Modification Date and Time}
-% The following macros can be used to print (i.e.\ typeset) the file modification date and time of files in the document.
-% The \Macro\formatdate and \Macro\formattime macros of the \pkg{datetime}\footnote{CTAN: \url{http://www.ctan.org/pkg/datetime}} can be used in addition to format the dates and times
-% in a language specific format.
-% See also the \pkg{getfiledate}\footnote{CTAN: \url{http://www.ctan.org/pkg/getfiledate}} package which also prints file modification dates including adding fancy frames around it.
+% The following macros can be used to print (i.e.\ typeset) the file modification date and time of files in the
+% document.  The \Macro\formatdate and \Macro\formattime macros of the \pkg{datetime}\footnote{CTAN:
+% \url{http://www.ctan.org/pkg/datetime}} can be used in addition to format the dates and times in a language specific
+% format.  See also the \pkg{getfiledate}\footnote{CTAN: \url{http://www.ctan.org/pkg/getfiledate}} package which also
+% prints file modification dates including adding fancy frames around it.
 %
 % \DescribeMacro{\filemodprint}{<\/filename>}
 % Prints the file modifications date and time using `|\filemodparse` and `|\thefilemod`.
@@ -297,11 +296,14 @@
 %
 %
 % \subsection{Parsing of the file modification date}
-% The format returned by the |\pdffilemoddate| primitive is \enquote{\texttt{D:}} followed by a number in the format \enquote{\texttt{YYYYMMDDHHmmSST}} which needs to be parsed before
-% it is useful. The letters have the following meaning: \texttt{Y} = year, \texttt{M} = month, \texttt{D} = day, \texttt{H} = hour, \texttt{mm} = minutes, \texttt{S} = seconds, \texttt{T} or \texttt{TZ} = timezone string. The number of letters indicates the length except for the timezone which is of variable length.
-% An example is \enquote{\texttt{\pdffilemoddate{\jobname.dtx}}} which is the file modification date of the source file of this manual.
-% Unfortunately this number is to large for TeX to be taken as an integer for numerical comparisons, so it is broken into two numbers (\texttt{YYYYMMDD} and \texttt{HHmmSS}) which are compared
-% in multiple steps.
+% The format returned by the |\pdffilemoddate| primitive is \enquote{\texttt{D:}} followed by a number in the format
+% \enquote{\texttt{YYYYMMDDHHmmSST}} which needs to be parsed before it is useful. The letters have the following
+% meaning: \texttt{Y} = year, \texttt{M} = month, \texttt{D} = day, \texttt{H} = hour, \texttt{mm} = minutes, \texttt{S}
+% = seconds, \texttt{T} or \texttt{TZ} = timezone string. The number of letters indicates the length except for the
+% timezone which is of variable length.  An example is \enquote{\texttt{\pdffilemoddate{\jobname.dtx}}} which is the
+% file modification date of the source file of this manual.  Unfortunately this number is to large for TeX to be taken
+% as an integer for numerical comparisons, so it is broken into two numbers (\texttt{YYYYMMDD} and \texttt{HHmmSS})
+% which are compared in multiple steps.
 %
 % \DescribeMacro{\filemodparse}{<macro>}{<\/filename>}
 % Parses the file modification datetime of the given file and passes the result to the given macro.
@@ -608,20 +610,24 @@
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \subsubsection{Optional argument handler}
 %
-% \begin{macro}{\filemod@opt}[3]{Macro to read optional argument when present}{Next macro which receives default optional argument as first normal argument}{\texttt{[} or first mandatory argument}
-% This macro checks if an optional argument is present. Here |#1| and |#2| are handlers and |#3| is the first balanced text which followed the macro, i.e.\ either "[" or the first
-% mandatory argument.
+% \begin{macro}{\filemod@opt}[3]{Macro to read optional argument when present}{Next macro which receives default
+% optional argument as first normal argument}{\texttt{[} or first mandatory argument}
+% This macro checks if an optional argument is present. Here |#1| and |#2| are handlers and |#3| is the first balanced
+% text which followed the macro, i.e.\ either "[" or the first mandatory argument.
 % The |\ifx| compares "[" and the first token of |#3|. There are three possible cases:
 % \begin{enumerate}
-%   \item If they do not match everything until and including |\else| is skipped.
-% Then |\remove@to@nnil@exec| is expanded which removes the following |\@nnil|. This leaves |\empty| and the rest of the \emph{false} clause.
-% The |\fi| is removed using |\expandafter| and the trailing |{#3}| is read by |#2| as normal argument.
-%   \item If |#3| is exactly "[" the |\ifx[#3| part is removed by \TeX. The |\remove@to@nnil@exec| removes the |\@nnil| and the |\remove@to@nnil| because there was nothing before |\@nnil|.
-% Therefore |\expandafter#1| is executed which triggers |\else| which removes everything up to and including |\fi|.
-% Then the optional argument handler |#1| is expanded which receives the "[" as "{[}" which is then gobbled.
-%   \item The |#3| starts with "[" but contains more material, i.e.\ was original a mandatory argument. Then |\ifx| expands to the \emph{true} clause and removes
-%   the first token of |#3|. The |\remove@to@nnil@exec| gobbles the rest of |#3| but reads and reinserts |\remove@to@nnil| which gobbles everything to the next |\@nnil|
-%   after |\else| and therefore jumps to the \emph{false} clause. This clause is executed like normal, i.e.\ |#2| is called with the default optional argument and |{#3}| as second argument.
+%   \item If they do not match everything until and including |\else| is skipped.  Then |\remove@to@nnil@exec| is
+%   expanded which removes the following |\@nnil|. This leaves |\empty| and the rest of the \emph{false} clause.  The
+%   |\fi| is removed using |\expandafter| and the trailing |{#3}| is read by |#2| as normal argument.
+%   \item If |#3| is exactly "[" the |\ifx[#3| part is removed by \TeX. The |\remove@to@nnil@exec| removes the |\@nnil|
+%   and the |\remove@to@nnil| because there was nothing before |\@nnil|.  Therefore |\expandafter#1| is executed which
+%   triggers |\else| which removes everything up to and including |\fi|.  Then the optional argument handler |#1| is
+%   expanded which receives the "[" as "{[}" which is then gobbled.
+%   \item The |#3| starts with "[" but contains more material, i.e.\ was original a mandatory argument. Then |\ifx|
+%   expands to the \emph{true} clause and removes the first token of |#3|. The |\remove@to@nnil@exec| gobbles the rest
+%   of |#3| but reads and reinserts |\remove@to@nnil| which gobbles everything to the next |\@nnil| after |\else| and
+%   therefore jumps to the \emph{false} clause. This clause is executed like normal, i.e.\ |#2| is called with the
+%   default optional argument and |{#3}| as second argument.
 % \end{enumerate}
 %    \begin{macrocode}
 \def\filemod@opt#1#2#3{%
