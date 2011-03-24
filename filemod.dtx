@@ -61,6 +61,8 @@
 \usepackage{filemod}[2011/03/24]
 \usepackage{multicol}
 \usepackage{csquotes}
+\usepackage{tgpagella}
+\usepackage{dtklogos}
 \MakeShortMacroArgs\`\relax
 \EnableCrossrefs
 \CodelineIndex
@@ -74,7 +76,7 @@
 %</dtx>
 % \fi
 %
-% \CheckSum{626}
+% \CheckSum{765}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -94,7 +96,7 @@
 %
 %
 % \changes{v1.0}{2011/03/23}{First release}
-% \changes{v1.1}{2011/03/24}{Added LuaLaTeX support}
+% \changes{v1.1}{2011/03/24}{Added Lua(La)TeX and plain eTeX support.}
 %
 % \DoNotIndex{\newcommand,\newenvironment}
 %
@@ -107,9 +109,10 @@
 %   This package provides macros to read and compare the modification dates of files.  These files can be |.tex| files,
 %   images or other files as long as they can be found by the \LaTeX\ compiler.  It uses the |\pdffilemoddate| primitive
 %   of pdf\LaTeX\ to receive the file modification date as PDF date string, parses it and returns the value to the user.
-%   The functionality is provided by purely expandable macros or by faster but non-expandable ones.  This package will
-%   also work for DVI output with recent versions of the \LaTeX\ compiler which uses pdf\LaTeX\ in DVI mode.  Support
-%   for Lua\LaTeX{} is provided with help of the \pkg{pdftexcmds} package.
+%   The functionality is provided by purely expandable macros or by faster but non-expandable ones.
+%
+%   This package will work with \LaTeX{} and plain \eTeX{} as long pdf\LaTeXTeX{} (in PDF or DVI mode) or Lua\LaTeXTeX{}
+%   is used. \XeTeX{} is not supported because it does not provide |\pdffilemoddate|.
 % \end{abstract}
 %
 % \begin{multicols}{2}
