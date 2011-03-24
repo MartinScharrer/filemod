@@ -131,7 +131,14 @@
 %
 %
 % \section{Usage}
-% The following macros are provided by this package:
+% This package can be loaded with \LaTeX{} using |\usepackage{filemod}| as usual.
+% With plain \eTeX{} it can be loaded using |\input filemod|.
+% Some required internal \LaTeX{} macros (like |\@gobble|, |\@firstofone|, etc.) are then defined.
+%
+% A minimal set of expandable macros for the comparison of file modification dates is provided by the sub-package
+% \pkg{filemod-expmin}. It is useful for other packages which need this functionality but don't like to load the whole package.
+% It can be loaded using |\usepackage{filemod-expmin}| (or |\RequirePackage|) or |\input filemod-expmin|, respectively.
+%
 %
 % \subsection{Print File Modification Date and Time}
 % The following macros can be used to print (i.e.\ typeset) the file modification date and time of files in the
