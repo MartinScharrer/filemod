@@ -6,9 +6,11 @@ RMDIR=rm -rf
 PDFLATEX=pdflatex -interaction=batchmode
 LATEXMK=latexmk -pdf -silent
 
-PACKEDFILES=filemod.sty
-DOCFILES=filemod.pdf
-SRCFILES=filemod.dtx filemod.ins README Makefile
+LATEXFILES=filemod.sty filemod-expmin.sty
+TEXFILES=filemod.tex filemod-expmin.tex
+PACKEDFILES=${LATEXFILES} ${TEXFILES}
+DOCFILES=filemod.pdf README
+SRCFILES=filemod.dtx filemod.ins
 
 
 RED   = \033[01;31m
@@ -43,6 +45,7 @@ pdfopt: doc
 	-makeindex -s gglo.ist -o "$@" "$<"
 	${PDFLATEX} $<
 	${PDFLATEX} $<
+	pdfopt $@ .$@ && mv .$@ $@
 
 
 .PHONY: test
@@ -66,27 +69,51 @@ ${INSTALLDIR}:
 ${DOCINSTALLDIR}:
 	mkdir -p $@
 
-ctanify: ${SRCFILES} ${DOCFILES} filemod.tds.zip
-	${RM} filemod.zip
-	zip filemod.zip $^ 
-	unzip -t filemod.zip
-	unzip -t filemod.tds.zip
-
 zip: filemod.zip
 
 tdszip: filemod.tds.zip
 
-filemod.zip: ${SRCFILES} ${DOCFILES} | pdfopt
+filemod.zip: ${SRCFILES} ${DOCFILES} filemod.tds.zip
 	${RM} $@
 	zip $@ $^ 
 
-filemod.tds.zip: ${SRCFILES} ${PACKEDFILES} ${DOCFILES} | pdfopt
+filemod.tds.zip: ${SRCFILES} ${PACKEDFILES} ${DOCFILES}
 	${RMDIR} tds
 	mkdir -p tds/tex/latex/filemod
+	mkdir -p tds/tex/generic/filemod
 	mkdir -p tds/doc/latex/filemod
 	mkdir -p tds/source/latex/filemod
 	${CP} ${DOCFILES}    tds/doc/latex/filemod
-	${CP} ${PACKEDFILES} tds/tex/latex/filemod
+	${CP} ${LATEXFILES}  tds/tex/latex/filemod
+	${CP} ${TEXFILES}    tds/tex/generic/filemod
 	${CP} ${SRCFILES}    tds/source/latex/filemod
 	cd tds; zip -r ../$@ .
+
+ctanify: filemod.zip
+	# Check if PDFs are identical
+	${RM} -rf .test
+	mkdir .test && cd .test && unzip ../filemod.zip
+	cd .test && unzip filemod.tds.zip
+	cd .test && cmp -s filemod.pdf doc/latex/filemod/filemod.pdf
+	${RM} -rf .test
+
+###########################
+# CTAN Upload
+CTAN=http://dante.ctan.org/upload.html
+CONTRIBUTION=filemod
+VERSION=
+NAME=Martin Scharrer
+EMAIL=martin@scharrer-online.de
+SUMMARY=Updated to ${VERSION}:
+DIRECTORY=/macros/latex/contrib/${CONTRIBUTION}
+DONOTANNOUNCE=
+ANNOUNCEMENT=
+NOTES=
+LICENCE=free
+FREEVERSION=lppl
+#FILE= # can't be set because of security limitations
+
+upload: ctanify
+	${CP} filemod.zip /tmp
+	firefox 'http://dante.ctan.org/upload.html?contribution=${CONTRIBUTION}&version=${VERSION}&name=${NAME}&email=${EMAIL}&summary=${SUMMARY}&directory=${DIRECTORY}&DoNotAnnounce=${DONOTANNOUNCE}&announce=${ANNOUNCEMENT}&notes=${NOTES}&license=${LICENCE}&freeversion=${FREEVERSION}' &
 
