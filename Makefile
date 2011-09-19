@@ -12,13 +12,16 @@ SRCFILES   = ${CONTRIBUTION}.sty filemod-expmin.sty
 DOCFILES   = ${CONTRIBUTION}.pdf README
 PLAINFILES = ${CONTRIBUTION}.tex filemod-expmin.tex
 SCRIPTS    =
-CTANFILES  = ${SRCFILES} ${DOCFILES} $(addsuffix =tex/generic/${CONTRIBUTION}/, ${PLAINFILES}) \
+CTANFILES  = ${SRCFILES} ${DOCFILES} \
+			 $(addsuffix =tex/generic/${CONTRIBUTION}/, ${PLAINFILES}) \
 			 $(addsuffix =scripts/${CONTRIBUTION}/, ${SCRIPTS})
+	
 
-
-TEXMF = ${HOME}/texmf
-
-LATEXMK = latexmk -pdf
+TEXMF    = ${HOME}/texmf
+LATEXMK  = latexmk -pdf
+BUILDDIR = build
+AUXEXTS  = .aux .bbl .blg .cod .exa .fdb_latexmk .glo .gls .lof .log .lot .out .pdf .que .run.xml .sta .stp .svn .svt .toc
+CLEANFILES = $(addprefix ${CONTRIBUTION}, ${AUXEXTS})
 
 .PHONY: all upload doc clean install uninstall build
 
@@ -32,10 +35,9 @@ upload: ${FILE}
 
 doc: ${CONTRIBUTION}.pdf
 
-${CONTRIBUTION}.pdf: ${CONTRIBUTION}.dtx ${CONTRIBUTION}.sty ${CONTRIBUTION}.ins
+${CONTRIBUTION}.pdf: ${CONTRIBUTION}.dtx ${SRCFILES} ${CONTRIBUTION}.ins
 	${MAKE} --no-print-directory build
 
-BUILDDIR = build
 
 build:
 	-mkdir ${BUILDDIR} 2>/dev/null || true
@@ -46,15 +48,16 @@ build:
 	cd ${BUILDDIR} && ctanify ${CTANFILES}
 	cd ${BUILDDIR} && cp ${CONTRIBUTION}.tar.gz ${CONTRIBUTION}.pdf ..
 
+
 clean:
 	latexmk -C ${CONTRIBUTION}.dtx
-	@${RM} ${CONTRIBUTION}.cod ${CONTRIBUTION}.glo ${CONTRIBUTION}.gls ${CONTRIBUTION}.exa ${CONTRIBUTION}.log ${CONTRIBUTION}.aux
+	${RM} ${CLEANFILES}
 	${RM} -r build ${FILE}
 
 
 distclean:
 	latexmk -c ${CONTRIBUTION}.dtx
-	@${RM} ${CONTRIBUTION}.cod ${CONTRIBUTION}.glo ${CONTRIBUTION}.gls ${CONTRIBUTION}.exa ${CONTRIBUTION}.log ${CONTRIBUTION}.aux
+	${RM} ${CLEANFILES}
 	${RM} -r build
 
 
