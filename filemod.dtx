@@ -77,7 +77,7 @@
 %</dtx>
 % \fi
 %
-% \CheckSum{787}
+% \CheckSum{789}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -374,10 +374,8 @@
 %
 % Ensure correct catcode for plainTeX:
 %    \begin{macrocode}
-%<*tex>
-\expandafter\edef\csname filemod@cat\endcsname{\noexpand\catcode`\noexpand\@=\the\catcode`\@\relax}
-\catcode`\@=11
-%</tex>
+%<tex>\expandafter\edef\csname filemod@cat\endcsname{\noexpand\catcode`\noexpand\@=\the\catcode`\@\relax}
+%<tex>\catcode`\@=11
 %    \end{macrocode}
 %
 % Check if the \Macro\pdffilemoddate command is available. If not (e.g.\ with LuaLaTeX) the \pkg{pdftexcmds} is loaded
@@ -387,7 +385,9 @@
 \csname newif\expandafter\endcsname\csname iffilemod@direct\endcsname
 \filemod@directtrue
 \ifx\pdffilemoddate\@undefined
-%<latex> \RequirePackage{pdftexcmds}
+%<*latex>
+ \RequirePackage{pdftexcmds}
+%</latex>
 %<tex>   \input pdftexcmds.sty
     \filemod@directfalse
     \ifx\pdf@filemoddate\@undefined
@@ -397,7 +397,9 @@
          Please make sure that pdfLaTeX 1.30.0 or\space\space\space newer or LuaLaTeX is used.
          XeLaTeX does not support reading file modification\space\space dates.
         }%
-%<latex>  \PackageError{filemod}{Required command \string\pdffilemoddate\space is not defined!}{\filemod@help}
+%<*latex>
+  \PackageError{filemod}{Required command \string\pdffilemoddate\space is not defined!}{\filemod@help}
+%</latex>
 %<tex>    \errhelp\expandafter{\filemod@help}
 %<tex>    \errmessage{filemod package: Required command \string\pdffilemoddate\space is not defined!}
     \fi
@@ -418,7 +420,9 @@
 %
 % \begin{macro}{\filemodparse}[2]{Macro or tokens to process result}{file name}
 %    \begin{macrocode}
-%<latex>\newcommand*\filemodparse{}
+%<*latex>
+\newcommand*\filemodparse{}
+%</latex>
 \iffilemod@direct
 \def\filemodparse#1#2{%
     \expandafter\filemod@parse\pdffilemoddate{#2}\relax{#1}%
@@ -470,7 +474,9 @@
 % \begin{macro}{\filemodnotexists}[1]{Macro provided to \Macro\filemodparse}
 % Macro which is used for non-existing files.
 %    \begin{macrocode}
-%<latex>\newcommand*\filemodnotexists{}
+%<*latex>
+\newcommand*\filemodnotexists{}
+%</latex>
 \gdef\filemodnotexists#1{%
     #1{0000}{00}{00}{00}{00}{00}{Z}%
 }
@@ -514,7 +520,9 @@
 %
 % \begin{macro}{\filemodNumdate}
 %    \begin{macrocode}
-%<latex>\newcommand*\filemodNumdate{}
+%<*latex>
+\newcommand*\filemodNumdate{}
+%</latex>
 \iffilemod@direct
 \gdef\filemodNumdate#1{%
     \expandafter\filemod@Numdate\pdffilemoddate{#1}D:00000000000000Z\relax
@@ -538,7 +546,9 @@
 %
 % \begin{macro}{\filemodNumtime}
 %    \begin{macrocode}
-%<latex>\newcommand*\filemodNumtime{}
+%<*latex>
+\newcommand*\filemodNumtime{}
+%</latex>
 \iffilemod@direct
 \gdef\filemodNumtime#1{%
     \expandafter\filemod@Numtime\pdffilemoddate{#1}D:00000000000000Z\relax
@@ -574,7 +584,9 @@
 %
 % \begin{macro}{\filemodCmp}
 %    \begin{macrocode}
-%<latex>\newcommand*\filemodCmp[2]%
+%<*latex>
+\newcommand*\filemodCmp[2]%
+%</latex>
 %<tex>\def\filemodCmp#1#2%
 {%
     \ifcase0%
@@ -595,10 +607,8 @@
 %
 % Some required \LaTeX{} macros for the plain\TeX{} version:
 %    \begin{macrocode}
-%<*tex>
-\long\def\@firstoftwo#1#2{#1}
-\long\def\@secondoftwo#1#2{#2}
-%</tex>
+%<tex>\long\def\@firstoftwo#1#2{#1}
+%<tex>\long\def\@secondoftwo#1#2{#2}
 %    \end{macrocode}
 %
 % \iffalse
@@ -609,7 +619,9 @@
 %<*package>
 % \fi
 %    \begin{macrocode}
-%<latex>\RequirePackage{filemod-expmin}
+%<*latex>
+\RequirePackage{filemod-expmin}
+%</latex>
 %<tex>\input filemod-expmin
 %    \end{macrocode}
 % \iffalse
@@ -628,7 +640,9 @@
 % \begin{macro}{\filemodnumdate}
 % Simply calls the parse macro.
 %    \begin{macrocode}
-%<latex>\newcommand*%
+%<*latex>
+\newcommand*%
+%</latex>
 %<tex>\def
 \filemodnumdate{\filemodparse\filemod@numdate}
 %    \end{macrocode}
@@ -647,7 +661,9 @@
 % \begin{macro}{\filemodnumtime}
 % Simply calls the parse macro.
 %    \begin{macrocode}
-%<latex>\newcommand*%
+%<*latex>
+\newcommand*%
+%</latex>
 %<tex>\def
 \filemodnumtime{\filemodparse\filemod@numtime}
 %    \end{macrocode}
@@ -721,7 +737,9 @@
 % Compare two file mod dates.
 % Calls macros to check for an optional argument in an expandable way.
 %    \begin{macrocode}
-%<latex>\newcommand*%
+%<*latex>
+\newcommand*%
+%</latex>
 %<tex>\def
 \filemodcmp{%
     \filemod@opt\filemod@cmp@opt\filemod@cmp
@@ -733,7 +751,9 @@
 % \begin{macro}{\filemodoptdefault}
 % The default optional argument which is used if none is provided.
 %    \begin{macrocode}
-%<latex>\newcommand*%
+%<*latex>
+\newcommand*%
+%</latex>
 %<tex>\def
 \filemodoptdefault{1}
 %    \end{macrocode}
@@ -813,12 +833,10 @@
 %
 % Some required \LaTeX{} macros for the plain\TeX{} version:
 %    \begin{macrocode}
-%<*tex>
-\long\def\@thirdofthree#1#2#3{#3}
-\long\def\@gobble#1{}
-\long\def\@gobbletwo#1#2{}
-\def\remove@to@nnil#1\@nnil{}
-%</tex>
+%<tex>\long\def\@thirdofthree#1#2#3{#3}
+%<tex>\long\def\@gobble#1{}
+%<tex>\long\def\@gobbletwo#1#2{}
+%<tex>\def\remove@to@nnil#1\@nnil{}
 %    \end{macrocode}
 %
 %
@@ -831,7 +849,9 @@
 % \begin{macro}{\filemodnewest}
 % First a macro is called to handle an optional argument in an expandable way.
 %    \begin{macrocode}
-%<latex>\newcommand*%
+%<*latex>
+\newcommand*%
+%</latex>
 %<tex>\def
 \filemodnewest{%
     \filemod@opt\filemod@newest@opt\filemod@newest
@@ -865,7 +885,9 @@
 % \begin{macro}{\filemodoldest}
 % First a macro is called to handle an optional argument in an expandable way.
 %    \begin{macrocode}
-%<latex>\newcommand*%
+%<*latex>
+\newcommand*%
+%</latex>
 %<tex>\def
 \filemodoldest{%
     \filemod@opt\filemod@oldest@opt\filemod@oldest
@@ -901,7 +923,9 @@
 % \begin{macro}{\filemodNewest}[1]{Tokens between macros and opening brace}
 % Checks for an optional argument and substitutes the default if it is missing.
 %    \begin{macrocode}
-%<latex>\newcommand*\filemodNewest{}
+%<*latex>
+\newcommand*\filemodNewest{}
+%</latex>
 \def\filemodNewest#1#{%
   \expandafter\expandafter
   \expandafter\@filemodNewest
@@ -927,7 +951,9 @@
 % This is done for the benefit of expansion speed versus memory usage.
 % Future versions might use common code instead.
 %    \begin{macrocode}
-%<latex>\newcommand*\filemodOldest{}
+%<*latex>
+\newcommand*\filemodOldest{}
+%</latex>
 \def\filemodOldest#1#{%
   \expandafter\expandafter
   \expandafter\@filemodOldest
@@ -1078,7 +1104,9 @@
 %
 % \begin{macro}{\Filemodgetnum}
 %    \begin{macrocode}
-%<latex>\newcommand*%
+%<*latex>
+\newcommand*%
+%</latex>
 %<tex>\def
 \Filemodgetnum{\filemodparse\Filemod@getnum}
 %    \end{macrocode}
@@ -1197,6 +1225,9 @@
 % Handlers for optional arguments for plain\TeX{}.
 % If none is provided the \Macro\filemodoptdefault is used.
 %    \begin{macrocode}
+%<*IGNORE>
+\iffalse
+%</IGNORE>
 %<*tex>
 \def\filemod@chkopt#1{%
     \def\filemod@optcmd{#1}%
@@ -1214,6 +1245,9 @@
     \filemod@optcmd{#1}%
 }
 %</tex>
+%<*IGNORE>
+\fi
+%</IGNORE>
 %    \end{macrocode}
 %
 % \begin{macro}{\Filemodnewest}
@@ -1222,10 +1256,8 @@
 %<*latex>
 \newcommand*\Filemodnewest[3][\filemodoptdefault]{\FilemodNewest[{#1}]{{#2}{#3}}}
 %</latex>
-%<*tex>
-\def\Filemodnewest{\filemod@chkopt\Filemod@newest}
-\def\Filemod@newest#1#2#3{\Filemod@Newest{#1}{{#2}{#3}}}
-%</tex>
+%<tex>\def\Filemodnewest{\filemod@chkopt\Filemod@newest}
+%<tex>\def\Filemod@newest#1#2#3{\Filemod@Newest{#1}{{#2}{#3}}}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1236,10 +1268,8 @@
 %<*latex>
 \newcommand*\Filemodoldest[3][\filemodoptdefault]{\FilemodOldest[{#1}]{{#2}{#3}}}
 %</latex>
-%<*tex>
-\def\Filemodoldest{\filemod@chkopt\Filemod@oldest}
-\def\Filemod@oldest#1#2#3{\Filemod@Oldest{#1}{{#2}{#3}}}
-%</tex>
+%<tex>\def\Filemodoldest{\filemod@chkopt\Filemod@oldest}
+%<tex>\def\Filemod@oldest#1#2#3{\Filemod@Oldest{#1}{{#2}{#3}}}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1249,7 +1279,9 @@
 % Uses \Macro\Filemod@est with a different compare sign.
 % Stores the optional argument for later processing. This avoids the need to pass it around as an argument.
 %    \begin{macrocode}
-%<latex>\newcommand*\FilemodNewest[2][\filemodoptdefault]%
+%<*latex>
+\newcommand*\FilemodNewest[2][\filemodoptdefault]%
+%</latex>
 %<tex>\def\FilemodNewest{\filemod@chkopt\Filemod@Newest}
 %<tex>\def\Filemod@Newest#1#2%
 {%
@@ -1265,7 +1297,9 @@
 % Uses \Macro\Filemod@est with a different compare sign.
 % Stores the optional argument for later processing. This avoids the need to pass it around as an argument.
 %    \begin{macrocode}
-%<latex>\newcommand*\FilemodOldest[2][\filemodoptdefault]%
+%<*latex>
+\newcommand*\FilemodOldest[2][\filemodoptdefault]%
+%</latex>
 %<tex>\def\FilemodOldest{\filemod@chkopt\Filemod@Oldest}
 %<tex>\def\Filemod@Oldest#1#2%
 {%
@@ -1336,7 +1370,9 @@
 %
 % \begin{macro}{\Filemodtoday}
 %    \begin{macrocode}
-%<latex>\newcommand*\Filemodtoday[1]%
+%<*latex>
+\newcommand*\Filemodtoday[1]%
+%</latex>
 %<tex>\def\Filemodtoday#1%
 {{%
     \def\thefilemod##1##2##3##4##5##6##7{\year##1 \month##2 \day##3 \today}%
@@ -1347,7 +1383,9 @@
 %
 % \begin{macro}{\FilemodToday}
 %    \begin{macrocode}
-%<latex>\newcommand*\FilemodToday[1]%
+%<*latex>
+\newcommand*\FilemodToday[1]%
+%</latex>
 %<tex>\def\FilemodToday#1%
 {{%
     \def\thefilemoddate##1##2##3{\year##1 \month##2 \day##3 \today}%
@@ -1370,7 +1408,9 @@
 %
 % \begin{macro}{\filemodprint}
 %    \begin{macrocode}
-%<latex>\newcommand*
+%<*latex>
+\newcommand*
+%</latex>
 %<tex>\def
 \filemodprint{\filemodparse\thefilemod}
 %    \end{macrocode}
@@ -1379,7 +1419,9 @@
 %
 % \begin{macro}{\filemodprintdate}
 %    \begin{macrocode}
-%<latex>\newcommand*
+%<*latex>
+\newcommand*
+%</latex>
 %<tex>\def
 \filemodprintdate{\filemodparse\the@filemoddate}
 %    \end{macrocode}
@@ -1388,7 +1430,9 @@
 %
 % \begin{macro}{\filemodprinttime}
 %    \begin{macrocode}
-%<latex>\newcommand*
+%<*latex>
+\newcommand*
+%</latex>
 %<tex>\def
 \filemodprinttime{\filemodparse\the@filemodtime}
 %    \end{macrocode}
@@ -1397,7 +1441,9 @@
 %
 % \begin{macro}{\thefilemod}
 %    \begin{macrocode}
-%<latex>\newcommand*\thefilemod[7]%
+%<*latex>
+\newcommand*\thefilemod[7]%
+%</latex>
 %<tex>\def\thefilemod#1#2#3#4#5#6#7%
 {%
     \thefilemoddate{#1}{#2}{#3}%
@@ -1408,13 +1454,17 @@
 % \end{macro}
 %
 %    \begin{macrocode}
-%<latex>\newcommand*\filemodsep{ }
+%<*latex>
+\newcommand*\filemodsep{ }
+%</latex>
 %<tex>\let\filemodsep\space
 %    \end{macrocode}
 %
 % \begin{macro}{\thefilemoddate}
 %    \begin{macrocode}
-%<latex>\newcommand*\thefilemoddate[3]%
+%<*latex>
+\newcommand*\thefilemoddate[3]%
+%</latex>
 %<tex>\def\thefilemoddate#1#2#3%
 {#1/#2/#3}
 %    \end{macrocode}
@@ -1423,7 +1473,9 @@
 %
 % \begin{macro}{\thefilemodtime}
 %    \begin{macrocode}
-%<latex>\newcommand*\thefilemodtime[4]%
+%<*latex>
+\newcommand*\thefilemodtime[4]%
+%</latex>
 %<tex>\def\thefilemodtime#1#2#3#4%
 {%
     #1:#2:#3~#4%
@@ -1462,8 +1514,10 @@
 % The "Z" characters are changed to catcode 12 because this is how they appear in the string
 % returned by `|\pdffilemoddate`.
 %    \begin{macrocode}
-%<latex>\newcommand*\filemodZ{}
-%<latex>\newcommand*\filemodz{}
+%<*latex>
+\newcommand*\filemodZ{}
+\newcommand*\filemodz{}
+%</latex>
 \begingroup
 \catcode`\D=12
 %    \end{macrocode}
@@ -1493,10 +1547,8 @@
 %
 % Restore catcode for plainTeX:
 %    \begin{macrocode}
-%<*tex>
-\filemod@cat
-\expandafter\let\csname filemod@cat\endcsname\relax
-%</tex>
+%<tex>\filemod@cat
+%<tex>\expandafter\let\csname filemod@cat\endcsname\relax
 %    \end{macrocode}
 %
 % \Finale

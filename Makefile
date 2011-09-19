@@ -55,7 +55,7 @@ test: unpack
 
 clean:
 	-latexmk -C filemod.dtx
-	${RM} ${PACKEDFILES} *.zip *.log *.aux *.toc *.vrb *.nav *.pdf *.snm *.out *.fdb_latexmk *.glo *.gls *.hd *.sta *.stp
+	${RM} ${PACKEDFILES} *.zip *.log *.aux *.toc *.vrb *.nav *.pdf *.snm *.out *.fdb_latexmk *.glo *.gls *.hd *.sta *.stp *.cod
 	${RMDIR} tds
 
 install: unpack doc ${INSTALLDIR} ${DOCINSTALLDIR}
