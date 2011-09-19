@@ -182,6 +182,15 @@
 % |\renewcommand*{\thefilemodtime}[4]{\formattime{#1}{#2}{#3}}|
 %
 %
+% \DescribeMacro{\Filemodtoday}{<\/filename>}
+% Prints the file modification date of the given file in the current format of \Macro\today.
+% For this the compiler date is set locally to the file modification date and then \Macro\today is used to print that date.
+% This takes advantages of any localised definition provided by the \pkg{babel} package or other packages.
+%
+% \DescribeMacro{\FilemodToday}{<\/filename>}
+% Similar to \Macro\FilemodToday but also prints the full file modification date/time using the
+% \Macro\thefilemod format macro.
+% For this the \Macro\thefilemoddate macro is changed locally to use \Macro\today with the file modification date.
 %
 %
 % \subsection{Get File Modification Date and Time as Number}
