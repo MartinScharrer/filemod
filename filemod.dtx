@@ -1,7 +1,8 @@
 % \iffalse meta-comment
-%<*COPYRIGHT>
-%% Copyright (C) 2011 by Martin Scharrer <martin@scharrer-online.de>
-%% ---------------------------------------------------------------------------
+%<=*COPYRIGHT>
+%%
+%% Copyright (C) 2011 by Martin Scharrer <martin@scharrer.me>
+%% ----------------------------------------------------------
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3
 %% of this license or (at your option) any later version.
@@ -15,8 +16,10 @@
 %% The Current Maintainer of this work is Martin Scharrer.
 %% 
 %% This work consists of the files filemod.dtx and filemod.ins
-%% and the derived filebase filemod.sty.
-%</COPYRIGHT>
+%% and the derived files filemod.sty, filemod-expmin.sty,
+%% filemod.tex and filemod-expmin.tex.
+%%
+%<=/COPYRIGHT>
 % \fi
 %
 % \iffalse
@@ -24,14 +27,14 @@
 \begingroup
 %</dtx>
 %<*install>
-\input docstrip.tex
+\input ydocstrip.tex
 \keepsilent
 \askforoverwritefalse
 \generate{%
-    \file{filemod.sty}        {\nopreamble\from{filemod.dtx}{COPYRIGHT,filemod.sty,latex}}%
-    \file{filemod.tex}        {\nopreamble\from{filemod.dtx}{COPYRIGHT,filemod.sty,tex}}%
-    \file{filemod-expmin.sty} {\nopreamble\from{filemod.dtx}{COPYRIGHT,filemod-expmin.sty,latex}}%
-    \file{filemod-expmin.tex} {\nopreamble\from{filemod.dtx}{COPYRIGHT,filemod-expmin.sty,tex}}%
+    \file{filemod.sty}        {\nopreamble\from{filemod.dtx}{filemod.sty,latex}}%
+    \file{filemod.tex}        {\nopreamble\from{filemod.dtx}{filemod.sty,tex}}%
+    \file{filemod-expmin.sty} {\nopreamble\from{filemod.dtx}{filemod-expmin.sty,latex}}%
+    \file{filemod-expmin.tex} {\nopreamble\from{filemod.dtx}{filemod-expmin.sty,tex}}%
 }
 %</install>
 %<install>\endbatchfile
@@ -42,7 +45,15 @@
 %
 % \iffalse
 %<*dtx>
-\ProvidesFile{filemod.dtx}[2011/09/19 v1.2 Get and compare file modification times]
+\NeedsTeXFormat{LaTeX2e}[1999/12/01]
+\ProvidesFile{filemod.dtx}[%
+%<=*DATE>
+    2011/09/19
+%<=/DATE>
+%<=*VERSION>
+    v1.2
+%<=/VERSION>
+    DTX file for filemod]
 \documentclass{ydoc}
 \usepackage{filemod}[2011/09/19]
 \usepackage{multicol}
