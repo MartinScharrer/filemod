@@ -8,11 +8,14 @@ FILE          = ${CONTRIBUTION}.tar.gz
 export CONTRIBUTION VERSION NAME EMAIL SUMMARY DIRECTORY DONOTANNOUNCE ANNOUNCE NOTES LICENSE FREEVERSION FILE
 
 
+MAINDTX    = ${CONTRIBUTION}.dtx
+DTXFILES   = ${MAINDTX}
+INSFILES   = ${CONTRIBUTION}.ins
 SRCFILES   = ${CONTRIBUTION}.sty filemod-expmin.sty
 DOCFILES   = ${CONTRIBUTION}.pdf README
 PLAINFILES = ${CONTRIBUTION}.tex filemod-expmin.tex
 SCRIPTS    =
-CTANFILES  = ${SRCFILES} ${DOCFILES} \
+CTANFILES  = ${DTXFILES} ${INSFILES} ${DOCFILES} \
 			 $(addsuffix =tex/generic/${CONTRIBUTION}/, ${PLAINFILES}) \
 			 $(addsuffix =scripts/${CONTRIBUTION}/, ${SCRIPTS})
 	
@@ -27,11 +30,15 @@ CLEANFILES = $(addprefix ${CONTRIBUTION}, ${AUXEXTS})
 
 all: doc
 
-${FILE}: ${CONTRIBUTION}.dtx ${CONTRIBUTION}.ins ${CONTRIBUTION}.sty README ${CONTRIBUTION}.pdf
+${FILE}: ${CTANFILES}
 	${MAKE} --no-print-directory build
+
+
+upload: VERSION = $(strip $(shell grep '=\*VERSION' -A1 ${MAINDTX} | tail -n1))
 
 upload: ${FILE}
 	ctanupload -p
+
 
 doc: ${CONTRIBUTION}.pdf
 
