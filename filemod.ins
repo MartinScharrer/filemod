@@ -2,7 +2,9 @@
 \keepsilent
 \askforoverwritefalse
 \generate{%
-    \file{filemod.sty}        {\nopreamble\from{filemod.dtx} {COPYRIGHT,package,parse,exp,exe,display,aux}}%
-    \file{filemod-expmin.sty} {\nopreamble\from{filemod.dtx} {COPYRIGHT,expmin}}%
+    \file{filemod.sty}        {\nopreamble\from{filemod.dtx}{filemod.sty,latex}}%
+    \file{filemod.tex}        {\nopreamble\from{filemod.dtx}{filemod.sty,tex}}%
+    \file{filemod-expmin.sty} {\nopreamble\from{filemod.dtx}{filemod-expmin.sty,latex}}%
+    \file{filemod-expmin.tex} {\nopreamble\from{filemod.dtx}{filemod-expmin.sty,tex}}%
 }
 \endbatchfile
