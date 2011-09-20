@@ -21,3 +21,4 @@ syntax: glob
 *.svn
 *.svt
 *.toc
+build
