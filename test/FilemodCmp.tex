@@ -1,0 +1,85 @@
+\documentclass{article}
+
+\usepackage{filemod}
+
+\newcounter{tests}
+\newcounter{fail}
+\newcounter{success}
+
+\AtEndDocument{%
+    \par\bigskip\noindent
+    Results:\\
+    \tabular{ll}%
+    Tests:     & \arabic{tests}   \\
+    Succeeded: & \arabic{success}    \\
+    Failed:    & \arabic{fail} \\
+    \endtabular
+    \let~\space
+    \message{^^J%
+    Results:^^J%
+    Tests:~~~~~\arabic{tests}   ^^J%
+    Succeeded:~\arabic{success}    ^^J%
+    Failed:~~~~\arabic{fail} ^^J%
+    }%
+    \par
+}
+
+\def\test#1#2#3{%
+  \def\TESTSTR{#1}%
+  #1\relax
+  \edef\TEST{\filemodcmpresult#2}%
+  \edef\TARGET{#3}%
+  \stepcounter{tests}%
+  \par\bigskip
+  \par\noindent
+  \message{^^J%
+    \meaning\TESTSTR^^J%
+    \meaning\TEST^^J%
+    \ifx\TEST\TARGET
+        SUCCESS!%
+    \else
+        FAIL: \meaning\TARGET
+    \fi
+  ^^J}%
+  \ifx\TEST\TARGET
+    \stepcounter{success}%
+  \else
+    \stepcounter{fail}%
+  \fi
+  \meaning\TEST\\
+  \TEST
+}
+
+\begin{document}
+\begingroup
+\ttfamily
+
+
+
+\test{\FilemodCmp{filea}{fileb}}{{A}{B}{C}}{B{C}}
+\test{\FilemodCmp[-1]{filea}{fileb}}{{A}{B}{C}}{B{C}}
+\test{\FilemodCmp[0]{filea}{fileb}}{{A}{B}{C}}{B{C}}
+\test{\FilemodCmp[1]{filea}{fileb}}{{A}{B}{C}}{B{C}}
+\test{\FilemodCmp[2]{filea}{fileb}}{{A}{B}{C}}{B{C}}
+\test{\FilemodCmp[3]{filea}{fileb}}{{A}{B}{C}}{B}
+\test{\FilemodCmp[4]{filea}{fileb}}{{A}{B}{C}}{B}
+
+\test{\FilemodCmp{fileb}{filea}}{{B}{A}{C}}{B{C}}
+\test{\FilemodCmp[-1]{fileb}{filea}}{{B}{A}{C}}{B{C}}
+\test{\FilemodCmp[0]{fileb}{filea}}{{B}{A}{C}}{B{C}}
+\test{\FilemodCmp[1]{fileb}{filea}}{{B}{A}{C}}{B{C}}
+\test{\FilemodCmp[2]{fileb}{filea}}{{B}{A}{C}}{B{C}}
+\test{\FilemodCmp[3]{fileb}{filea}}{{B}{A}{C}}{B}
+\test{\FilemodCmp[4]{fileb}{filea}}{{B}{A}{C}}{B}
+
+\test{\FilemodCmp{filea}{filea}}{{A}{B}{C}}{A{C}}
+\test{\FilemodCmp[-1]{filea}{filea}}{{A}{B}{C}}{C}
+\test{\FilemodCmp[0]{filea}{filea}}{{A}{B}{C}}{{C}}
+\test{\FilemodCmp[1]{filea}{filea}}{{A}{B}{C}}{A{C}}
+\test{\FilemodCmp[2]{filea}{filea}}{{A}{B}{C}}{B{C}}
+\test{\FilemodCmp[3]{filea}{filea}}{{A}{B}{C}}{C}
+\test{\FilemodCmp[4]{filea}{filea}}{{A}{B}{C}}{C}
+
+\endgroup
+\end{document}
+

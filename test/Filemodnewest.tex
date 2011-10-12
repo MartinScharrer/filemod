@@ -1,0 +1,100 @@
+\documentclass{article}
+
+\usepackage{filemod}
+
+\newcounter{tests}
+\newcounter{fail}
+\newcounter{success}
+
+\AtEndDocument{%
+    \par\bigskip\noindent
+    Results:\\
+    \tabular{ll}%
+    Tests:     & \arabic{tests}   \\
+    Succeeded: & \arabic{success}    \\
+    Failed:    & \arabic{fail} \\
+    \endtabular
+    \let~\space
+    \message{^^J%
+    Results:^^J%
+    Tests:~~~~~\arabic{tests}   ^^J%
+    Succeeded:~\arabic{success}    ^^J%
+    Failed:~~~~\arabic{fail} ^^J%
+    }%
+    \par
+}
+
+\makeatletter
+\def\test#1#2{%
+  \def\TESTSTR{#1}%
+  #1\relax
+  \edef\TEST{\filemodresultfile}%
+  \edef\TARGET{#2}%
+  \@onelevel@sanitize\TEST
+  \@onelevel@sanitize\TARGET
+  \stepcounter{tests}%
+  \par\bigskip
+  \par\noindent
+  \message{^^J%
+    \meaning\TESTSTR^^J%
+    \meaning\TEST^^J%
+    \ifx\TEST\TARGET
+        SUCCESS!%
+    \else
+        FAIL: \meaning\TARGET
+    \fi
+  ^^J}%
+  \ifx\TEST\TARGET
+    \stepcounter{success}%
+  \else
+    \stepcounter{fail}%
+  \fi
+  \meaning\TEST\\
+  \TEST
+}
+\makeatother
+
+\begin{document}
+\begingroup
+\ttfamily
+
+
+\def\FILEA{filea}
+\def\FILEB{fileb}
+\test {\Filemodnewest{filea}{fileb}}{fileb}
+\test {\Filemodnewest\FILEA{fileb}}{fileb}
+\test {\Filemodnewest{filea}\FILEB}{fileb}
+\test {\Filemodnewest\FILEA\FILEB}{fileb}
+\test {\Filemodnewest{[filea}{fileb}}{fileb}
+%\test {\Filemodnewest{[}{filea}{fileb}}{fileb}
+
+
+\test {\Filemodnewest[1]{filea}{fileb}}{fileb}
+\test {\Filemodnewest[1]\FILEA{fileb}}{fileb}
+\test {\Filemodnewest[1]{filea}\FILEB}{fileb}
+\test {\Filemodnewest[1]\FILEA\FILEB}{fileb}
+
+\test {\Filemodnewest[2]{filea}{fileb}}{fileb}
+\test {\Filemodnewest[2]\FILEA{fileb}}{fileb}
+\test {\Filemodnewest[2]{filea}\FILEB}{fileb}
+\test {\Filemodnewest[2]\FILEA\FILEB}{fileb}
+
+\test {\Filemodnewest[1]{filea}{fileA}}{filea}
+\test {\Filemodnewest[1]\FILEA{fileA}}{filea}
+\test {\Filemodnewest[1]{fileA}\FILEA}{fileA}
+\test {\Filemodnewest[1]\FILEA\FILEA}{filea}
+
+\test {\Filemodnewest[2]{filea}{fileA}}{fileA}
+\test {\Filemodnewest[2]\FILEA{fileA}}{fileA}
+\test {\Filemodnewest[2]{fileA}\FILEA}{filea}
+\test {\Filemodnewest[2]\FILEA\FILEA}{filea}
+
+\test {\Filemodoldest{filea}{fileb}}{filea}
+\test {\Filemodoldest\FILEA{fileb}}{filea}
+\test {\Filemodoldest{filea}\FILEB}{filea}
+\test {\Filemodoldest\FILEA\FILEB}{filea}
+
+
+\endgroup
+\end{document}
+
