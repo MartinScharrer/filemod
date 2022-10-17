@@ -68,7 +68,7 @@
 %
 %
 % The "D", ":" and "Z" characters are changed to catcode 12 because this is how they appear in the string
-% returned by `|\pdffilemoddate`.
+% returned by \Macro\pdffilemoddate.
 %    \begin{macrocode}
 \begingroup
 \catcode`\D=12
@@ -970,7 +970,7 @@
 % \subsection{Auxiliary Macros}
 % 
 % The "Z" characters are changed to catcode 12 because this is how they appear in the string
-% returned by `|\pdffilemoddate`.
+% returned by \Macro\pdffilemoddate.
 %    \begin{macrocode}
 %<*latex>
 \newcommand*\filemodZ{}
@@ -981,7 +981,7 @@
 %    \end{macrocode}
 %
 % \begin{macro}{\filemodZ}
-% Holds "Z" with catcode 12 (\emph{other}) like it is returned by `|\pdffilemoddate`.
+% Holds "Z" with catcode 12 (\emph{other}) like it is returned by \Macro\pdffilemoddate.
 % Requires use of |\csname| because "Z" isn't a letter at the moment.
 %    \begin{macrocode}
 \expandafter\gdef\csname filemodZ\endcsname{Z}%
