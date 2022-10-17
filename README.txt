@@ -1,6 +1,6 @@
 The filemod Package
 ~~~~~~~~~~~~~~~~~~~
-Copyright (c) 2011-2022-2022 Martin Scharrer <martin.scharrer@web.de>
+Copyright (c) 2011-2022 Martin Scharrer <martin.scharrer@web.de>
 
 This package provides macros to read and compare the modification dates
 of files. These files can be .tex files, images or other files as long as they can be
